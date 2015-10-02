@@ -5,7 +5,7 @@
     <h1>My Calculator:</h1>
     <br>
 
-    <form method="get" action="calculator.php">
+    <form method="get" action="<?php echo $_SERVER["PHP_SELF"];?>">
 	Input: <input type="text" name="expression">
 	<input type="submit">
     </form>
