@@ -73,12 +73,15 @@
 	    return;
 	}
 
-	echo "$input = ";
-
         $strlength = strlen($input);
+
+	if ($strlength == 0){
+	    return;        
+	}
         
+	echo "$input = ";
         
-        $stackOp = array();
+	$stackOp = array();
         $stackOpNum = 0;
         
         $stackVal = array();
