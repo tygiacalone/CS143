@@ -68,12 +68,12 @@
 
 	// Get rid of malformed floats, do not allow repeated operators or operators
 	// Beginning or ending an expression.
-	if (preg_match('/[^0-9]\.\[^0-9]/', $input) || preg_match('/[+\-\*\/\.][ ]*[+\*\/\.]/', $input) || preg_match('/[^0-9][.][0-9]/', $input) || preg_match('/[.]$/', $input) || preg_match('/^[.\+\*\/]/', $input) || preg_match('/[+\-\*\/\.]$/', $input) ) {
+	if (preg_match('/[^0-9]\.\[^0-9]/', $input) || preg_match('/[+\-\*\/\.][ ]*[+\*\/\.]/', $input) || preg_match('/[^0-9][.][0-9]/', $input) || preg_match('/[.]$/', $input) || preg_match('/^[.\+\*\/]/', $input) || preg_match('/[+\-\*\/\.]$/', $input) || preg_match('/[+\-\*\/][-][-]/', $input) ) {
 	    echo "Invalid expression";
 	    return;
 	}
 
-	   echo "$input = ";
+	echo "$input = ";
 
         $strlength = strlen($input);
         
