@@ -41,13 +41,9 @@
             
             if($op == '*')
                 return $val1 * $val2;
-            
-            else {
-		if ($val1 == 0){
-		    return "ERR";
-		}
+	    
+	    else 
                 return $val2 / $val1;
-            }
         }
         
         
@@ -185,10 +181,6 @@
                     //Apply the operator to the operands, in the correct order.
                     $newVal = performOp($newOp, $val1, $val2);
                     
-		    if ($newVal == "ERR"){
-			echo "Division by zero error";
-			return;
-		    }
                     //Push the result onto the value stack
                     $stackVal[$stackValNum] = $newVal;
                     $stackValNum++;
@@ -240,6 +232,7 @@
         $endVal = $stackVal[0];
         echo "Result is: $endVal <br/>";
 	    $result = $input;
+	echo "$input = $endVal";
 	}
     ?>
 </body>
