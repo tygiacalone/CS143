@@ -84,7 +84,7 @@
 	    return;        
 	}
         
-	echo "$input = ";
+	//echo "$input = ";
         
 	$stackOp = array();
         $stackOpNum = 0;
@@ -128,7 +128,7 @@
                 //Add new value to value stack
                 $stackVal[$stackValNum] = $curVal1;
                 $stackValNum++;
-                echo "Adding $curVal1 to stack in decimal area <br/>";
+                //echo "Adding $curVal1 to stack in decimal area <br/>";
                 
             }
             
@@ -153,7 +153,7 @@
 
                 $stackVal[$stackValNum] = $curVal;
                 $stackValNum++;
-                echo "Adding $curVal to stack in is_numeric part <br/>";
+                //echo "Adding $curVal to stack in is_numeric part <br/>";
                 
             }
             
@@ -178,11 +178,11 @@
                     //Pop the value stack twice, getting two operands.
                     $val1 = $stackVal[$stackValNum - 1];
                     $stackValNum--;
-                    echo "Popping $val1 off of stack <br/>";
+                    //echo "Popping $val1 off of stack <br/>";
                     
                     $val2 = $stackVal[$stackValNum - 1];
                     $stackValNum--;
-                    echo "Popping $val2 off of stack <br/>";
+                    //echo "Popping $val2 off of stack <br/>";
                     
                     //Apply the operator to the operands, in the correct order.
                     $newVal = performOp($newOp, $val1, $val2);
@@ -190,7 +190,7 @@
                     //Push the result onto the value stack
                     $stackVal[$stackValNum] = $newVal;
                     $stackValNum++;
-                    echo "$val2". "$newOp" . "$val1" . " IS $newVal <br/>";
+                    //echo "$val2". "$newOp" . "$val1" . " IS $newVal <br/>";
                     
                 }
                 //Push thisOp onto the operator stack.
@@ -200,7 +200,7 @@
         }
         
         for($k = 0; $k < sizeof($stackVal); $k++)
-            echo "Remaining values in stackVal: $stackVal[$k] <br/>";
+            //echo "Remaining values in stackVal: $stackVal[$k] <br/>";
         
         //While the operator stack is not empty
         while($stackOpNum > 0)
@@ -212,11 +212,11 @@
             //Pop the value stack twice, getting two operands.
             $val1 = $stackVal[$stackValNum - 1];
             $stackValNum--;
-            echo "Popping $val1 off of stack at end <br/>";
+            //echo "Popping $val1 off of stack at end <br/>";
             
             $val2 = $stackVal[$stackValNum - 1];
             $stackValNum--;
-            echo "Popping $val2 off of stack at end <br/>";
+            //echo "Popping $val2 off of stack at end <br/>";
             
             //Apply the operator to the operands, in the correct order.
             $newVal = performOp($newOp, $val1, $val2);
@@ -224,19 +224,19 @@
             //Push the result onto the value stack
             $stackVal[$stackValNum] = $newVal;
             $stackValNum++;
-            echo "$val2". "$newOp" . "$val1" . " is $newVal <br/>";
+            //echo "$val2". "$newOp" . "$val1" . " is $newVal <br/>";
         }
         if($stackOpNum != 0) //This should never happen, if calculator implemented properly.
         {
-            echo "ERROR: The operator stack does not have exactly zero values left. <br/>";
+            //echo "ERROR: The operator stack does not have exactly zero values left. <br/>";
         }
         if($stackValNum != 1) //This should never happen, if calculator implemented properly.
         {
-            echo "ERROR: The value stack does not have exactly one value left. <br/>";
+            //echo "ERROR: The value stack does not have exactly one value left. <br/>";
         }
         
         $endVal = $stackVal[0];
-        echo "Result is: $endVal <br/>";
+        //echo "Result is: $endVal <br/>";
 	    $result = $input;
 	echo "$input = $endVal";
 	}
