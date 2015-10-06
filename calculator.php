@@ -42,8 +42,14 @@
             if($op == '*')
                 return $val1 * $val2;
 	    
-	    else 
+            else{
+                if($val1 == 0)
+                {
+                    echo "Division by zero error!";
+                    exit;
+                }
                 return $val2 / $val1;
+            }
         }
         
         
