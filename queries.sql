@@ -1,4 +1,3 @@
-
 SELECT CONCAT (first, ' ', last) AS 'DieAnotherDayActos'
 FROM Actor
 JOIN MovieActor ON Actor.id = MovieActor.aid

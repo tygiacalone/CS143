@@ -26,7 +26,7 @@
 
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	$query = $_GET['query'];
-	echo $query;
+	echo 'Your query was: ' . $query;
 	echo '<br>';
 
         if (strlen($query)) {
@@ -37,8 +37,8 @@
 	    if ($error) {
 		echo $error;
 	    }
-	    if(!$row){
-		echo "Table is empty!";
+	    else if(!$row){
+		echo "Result is empty" . '<br>';
 	    }
 	    else {
 		$num_rows = mysql_num_fields($result);
