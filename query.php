@@ -14,7 +14,7 @@
 
 <?php
     ini_set('display_errors', 1);
-    error_reporting( E_ALL);
+   // error_reporting( E_ALL);
 
     $db_connection = mysql_connect( 'localhost', 'cs143', '');
     mysql_select_db('TEST', $db_connection);
@@ -38,18 +38,21 @@
 		echo $error;
 	    }
 	    else {
-		echo '<table border="1">';
-		
+		$num_rows = mysql_num_fields($result);
+		echo '<table border="1" style="border-collapse: collapse">';
+    	
 		// Print column names
 		foreach( array_keys($row) as $val) {
-		    echo '<td>' . $val . '</td>';	
+		    echo '<td style="background-color: lightblue">' . $val . '</td>';	
 		} 
 		echo '</tr>';
 	
 		// Print values across each row	
-		while ($row) {
+		while($row) {
 		    echo '<tr>';
-		    echo '<td>' . $row['a'] . '</td>';
+		    foreach( array_keys($row) as $val) {
+			echo '<td>' . $row[$val] . '</td>'; 
+		    }
 		    echo '</tr>';
 		    $row = mysql_fetch_assoc($result);
 		}
