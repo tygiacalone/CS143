@@ -38,21 +38,19 @@
 		echo $error;
 	    }
 	    else {
-/**
-		while($row = @mysql_fetch_assoc($result)) {
-		    echo $row['a'];
-		    echo '<br';
-		}*/
 		echo '<table border="1">';
-
+		
+		// Print column names
+		foreach( array_keys($row) as $val) {
+		    echo '<td>' . $val . '</td>';	
+		} 
+		echo '</tr>';
+	
+		// Print values across each row	
 		while ($row) {
 		    echo '<tr>';
-		    foreach( array_keys($row) as $val) {
-			
-			echo '<td>' . $val . '</td>';
-			echo '</tr>';   
-			echo '<td>' . $row['a'] . '</td>';
-		    } 
+		    echo '<td>' . $row['a'] . '</td>';
+		    echo '</tr>';
 		    $row = mysql_fetch_assoc($result);
 		}
 		echo '</table>';
