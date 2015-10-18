@@ -1,9 +1,3 @@
-<?php
-
-
-?>
-
-
 <!DOCTYPE html>
 <html>
     <title>CS143 Project 1B</title>
@@ -22,16 +16,52 @@
     ini_set('display_errors', 1);
     error_reporting( E_ALL);
 
+    $db_connection = mysql_connect( 'localhost', 'cs143', '');
+    mysql_select_db('TEST', $db_connection);
+
+    if (!$db_connection) {
+	$err = mysql_erro($db_connection);
+	echo "Connection failed to database: $err <br>";
+    }
+
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	$query = $_GET['query'];
 	echo $query;
-    }
+	echo '<br>';
 
-    if (strlen($query)) {
-	// Logic here...
-    }
-    else {
-	echo 'Your query is empty!';
-    }
+        if (strlen($query)) {
+	    // Logic here...
+	    $result = mysql_query($query, $db_connection);
+	    $error = mysql_error(); 
+	    $row = @mysql_fetch_assoc($result);
+	    if ($error) {
+		echo $error;
+	    }
+	    else {
+/**
+		while($row = @mysql_fetch_assoc($result)) {
+		    echo $row['a'];
+		    echo '<br';
+		}*/
+		echo '<table border="1">';
 
+		while ($row) {
+		    echo '<tr>';
+		    foreach( array_keys($row) as $val) {
+			
+			echo '<td>' . $val . '</td>';
+			echo '</tr>';   
+			echo '<td>' . $row['a'] . '</td>';
+		    } 
+		    $row = mysql_fetch_assoc($result);
+		}
+		echo '</table>';
+		// Print out the data in a table...
+	    } 
+	 }
+	else {
+	    echo 'Your query is empty!';
+	}
+    }
+    mysql_close($db_connection);
 ?>
