@@ -37,6 +37,9 @@
 	    if ($error) {
 		echo $error;
 	    }
+	    if(!$row){
+		echo "Table is empty!";
+	    }
 	    else {
 		$num_rows = mysql_num_fields($result);
 		echo '<table border="1" style="border-collapse: collapse">';
