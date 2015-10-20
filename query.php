@@ -24,7 +24,7 @@
 	echo "Connection failed to database: $err <br>";
     }
 
-    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    if (!empty($_GET['query'])) {
 	$query = $_GET['query'];
 	echo 'Your query was: ' . $query;
 	echo '<br>';
