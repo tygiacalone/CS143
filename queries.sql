@@ -1,4 +1,5 @@
 
+
 /*  Find the names of all the actors in the movie 'Die Another Day'. 
 Please also make sure actor names are in this format:  <firstname> <lastname>   
 (seperated by single space). */
@@ -10,7 +11,7 @@ WHERE Movie.title = 'Die Another Day';
 
 
 /*Find the count of all the actors who acted in multiple movies. */
-SELECT SUM(count1) AS "Total Actors in Multuple Movies" FROM (
+SELECT SUM(count1) AS "Total Actors in Multiple Movies" FROM (
 	SELECT COUNT(*) AS count1
 	FROM MovieActor
 	GROUP BY aid
@@ -30,3 +31,8 @@ FROM (
 SELECT COUNT(id)
 FROM Actor;
 */
+
+/* Return the title(s) of all New Light Films that are rated R*/
+SELECT title
+FROM Movie
+WHERE rating = 'R' AND company = 'New Light Films';
