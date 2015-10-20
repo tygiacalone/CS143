@@ -8,7 +8,7 @@ CREATE TABLE Movie (
        /* id is primary key */
        PRIMARY KEY(id),
        /* Every movie must have a title */
-       CHECK (title IS NOT NULL),
+       CHECK (title IS NOT NULL AND LENGTH(title) > 0),
        /* Every movie must have a release year */
        CHECK (year IS NOT NULL)
 );

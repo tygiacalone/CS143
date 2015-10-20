@@ -6,7 +6,7 @@ INSERT INTO Actor VALUES (1, 'Drazen', 'Chloe', 'female', 02-17-1995, NULL);
 
 /* Violates primary key of Director because there already exists
    a person with an id of 2 */
-INSERT INTO Director VALUES (2, 'Giacalone', 'Ty', 05-09-1994, NULL);
+INSERT INTO Director VALUES (104, 'Giacalone', 'Ty', 05-09-1994, NULL);
 
 /* Violates primary key of Movie because there already exists
    a movie with an id of 12 */
@@ -28,7 +28,7 @@ INSERT INTO MovieDirector VALUES (1, 4770);
 INSERT INTO MovieActor VALUES (69100, 35, "Wicked Witch");
 
 /* Violate foreign key becaus Actor ID does not exist */
-INSERT INTO MovieActor VALUES (72, 4780, "Wicked Witch");
+INSERT INTO MovieActor VALUES (72, 5550, "Wicked Witch");
 
 /* Violate foreign key becaus Movie ID does not exist */
 INSERT INTO Review VALUES ("Chloe Drazen", '2010-01-01 00:00:01', 69100, 10, "Great movie!");
