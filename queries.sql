@@ -11,12 +11,12 @@ WHERE Movie.title = 'Die Another Day';
 
 
 /*Find the count of all the actors who acted in multiple movies. */
-SELECT SUM(count1) AS "Total Actors in Multiple Movies" FROM (
-	SELECT COUNT(*) AS count1
+SELECT COUNT(A.total) AS "Total Actors in Multiple Movies" FROM (
+	SELECT COUNT(*) AS total
 	FROM MovieActor
 	GROUP BY aid
 	HAVING COUNT(*) >= 2 
-) a;
+) A;
 
 /*
 SELECT COUNT(*)
