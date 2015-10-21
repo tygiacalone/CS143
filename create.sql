@@ -10,7 +10,8 @@ CREATE TABLE Movie (
        /* Every movie must have a title */
        CHECK (title IS NOT NULL AND LENGTH(title) > 0),
        /* Every movie must have a release year */
-       CHECK (year IS NOT NULL)
+       CHECK (year IS NOT NULL),
+
 );
 
 CREATE TABLE Actor (
@@ -26,6 +27,14 @@ CREATE TABLE Actor (
        CHECK (dob < dod),
        /* Every actor must have a birth date */
        CHECK (dob IS NOT NULL)
+
+         CHECK (  0 < SELECT COUNT(*)
+                     WHERE EXISTS (SELECT id
+                                   FROM Director d
+                                   JOIN ACtor a
+                                   WHERE d.id = a.id AND NOT (d.last = a.last AND d.first = a.first AND d.dob = a.dob AND d.dod = a.dod)
+                                  )
+               )
 );
 
 CREATE TABLE Director (
