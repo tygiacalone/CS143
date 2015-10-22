@@ -1,4 +1,3 @@
-
 CREATE TABLE Movie (
        id int NOT NULL,
        title varchar(100) NOT NULL,
@@ -10,9 +9,24 @@ CREATE TABLE Movie (
        /* Every movie must have a title */
        CHECK (title IS NOT NULL AND LENGTH(title) > 0),
        /* Every movie must have a release year */
-       CHECK (year IS NOT NULL),
-
+       CHECK (year IS NOT NULL)
 );
+
+
+CREATE TABLE Director (
+       id int NOT NULL,
+       last varchar(20),
+       first varchar(20),
+       dob date,
+       dod date,
+       /* id is primary key */
+       PRIMARY KEY(id),
+       /* Every director must be born before he/she dies */
+       CHECK (dob < dod),
+       /* Every director must have a birth date */
+       CHECK (dob IS NOT NULL)
+);
+
 
 CREATE TABLE Actor (
        id int NOT NULL,
@@ -26,28 +40,6 @@ CREATE TABLE Actor (
        /* Every actor must be born before he/she dies */
        CHECK (dob < dod),
        /* Every actor must have a birth date */
-       CHECK (dob IS NOT NULL)
-       /* Can't add Actor with id that Director (who is a different person) already has */
-         CHECK (  0 < SELECT COUNT(*)
-                     WHERE EXISTS (SELECT id
-                                   FROM Director d
-                                   JOIN ACtor a
-                                   WHERE d.id = a.id AND NOT (d.last = a.last AND d.first = a.first AND d.dob = a.dob AND d.dod = a.dod)
-                                  )
-               )
-);
-
-CREATE TABLE Director (
-       id int NOT NULL,
-       last varchar(20),
-       first varchar(20),
-       dob date,
-       dod date,
-       /* id is primary key */
-       PRIMARY KEY(id),
-       /* Every director must be born before he/she dies */
-       CHECK (dob < dod),
-       /* Every director must have a birth date */
        CHECK (dob IS NOT NULL)
 );
 
