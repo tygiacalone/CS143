@@ -17,7 +17,7 @@
    // error_reporting( E_ALL);
 
     $db_connection = mysql_connect( 'localhost', 'cs143', '');
-    mysql_select_db('cs143', $db_connection);
+    mysql_select_db('CS143', $db_connection);
 
     if (!$db_connection) {
 	$err = mysql_erro($db_connection);
