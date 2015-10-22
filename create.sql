@@ -27,7 +27,7 @@ CREATE TABLE Actor (
        CHECK (dob < dod),
        /* Every actor must have a birth date */
        CHECK (dob IS NOT NULL)
-
+       /* Can't add Actor with id that Director (who is a different person) already has */
          CHECK (  0 < SELECT COUNT(*)
                      WHERE EXISTS (SELECT id
                                    FROM Director d
