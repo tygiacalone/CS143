@@ -3,16 +3,11 @@
     <title>CS143 Project 1C</title>
 <body>
     <h1>CS 143 Database Search</h1>
-    First name:
-	<br>
-	<textarea rows="5" cols="50" type="text" name="firstname"></textarea>
-	<br>
-	Last name:
-	<br>
-	<textarea rows="5" cols="50" type="text" name="lastname"></textarea>
-   	<br>
+    <h2>Add Actor/Director</h2>
 
     <form method="get" action="<?php echo $_SERVER["PHP_SELF"];?>">
+    First name: <input type="text" name="firstname"> <br>
+    Last name: <input type="text" name="lastname"> <br>
     Profession:  
     <input type="radio" name="type" value="Actor" checked>Actor
     <input type="radio" name="type" value="Director">Director
@@ -22,24 +17,20 @@
     <input type="radio" name="sex" value="Female">Female
     <br>
 	Birth Month:
-	<input type="text" name="bmonth">
+	
 
 	<br>
-	Birth Day:
+    Date of Birth: (MM DD YYYY)<br>
 	<input type="text" name="bday">
-	<br>
-	Birth Year:
+	<input type="text" name="bmonth">
 	<input type="text" name="byear">
 	<br>
-	Death Month:
-	<input type="text" name="dmonth">
-
-	<br>
-	Death Day:
+    Date of Death: (MM DD YYYY) <br>
 	<input type="text" name="dday">
+	<input type="text" name="dmonth">
+    <input type="text" name="dyear">
 	<br>
-	Death Year:
-	<input type="text" name="dyear">
+	
 	<input type="submit">
     </form>
 </body>
@@ -60,59 +51,57 @@
 
     if (!empty($_GET['firstname'])) {
 	$firstname = "\"".$_GET['firstname']."\"";
-	echo $firstname;
+	//echo $firstname;
     }
+    else echo "POOP NO FIRST NAME";
 
     if (!empty($_GET['lastname'])) {
 	$lastname = "\"". $_GET['lastname']."\"";
-	echo $lastname;
+	//echo $lastname;
     }
 
     if (!empty($_GET['type'])) {
     $type = $_GET['type'];
-    echo $type;
+    //echo $type;
     }
-    
+
     if (!empty($_GET['gender'])) {
 	$gender = "\"".$_GET['gender']."\"";
-	echo $gender;
+	//echo $gender;
     }
 
     $gender = "\"" . $_GET['sex'] . "\"";
-    print $gender;
-    //$gender = test_input($_POST["sex"]);
-    // if (!empty ($_GET['male'])){
-    //     echo "ITS A BOY!" .'<br>';
-    // }
+    //print $gender;
+
     // Format for DOB: "YYYY-MM-DD"
     if (!empty($_GET['bday'])) {
 	$bday = $_GET['bday'];
-	echo $bday;
+	//echo $bday;
     }
 
     if (!empty($_GET['bmonth'])) {
 	$bmonth = $_GET['bmonth'];
-	echo $bmonth;
+	//echo $bmonth;
     }
 
     if (!empty($_GET['byear'])) {
 	$byear = $_GET['byear'];
-	echo $byear;
+	//echo $byear;
     }
 
     if (!empty($_GET['dday'])) {
     $dday = $_GET['dday'];
-    echo $dday;
+    //echo $dday;
     }
 
     if (!empty($_GET['dmonth'])) {
     $dmonth = $_GET['dmonth'];
-    echo $dmonth;
+    //echo $dmonth;
     }
 
     if (!empty($_GET['dyear'])) {
     $dyear = $_GET['dyear'];
-    echo $dyear;
+    //echo $dyear;
     }
 
     // if (strlen($query)) {
@@ -123,7 +112,7 @@
         if (isset($byear) and isset($bday) and isset($bmonth))
         {
             $DOBString = "\"" . $byear . "-" . $bmonth . "-" . $bday . "\"";
-    	    echo '<br>' . $DOBString;
+    	    //echo '<br>' . $DOBString;
         }
         else
             $DOBString = NULL;
@@ -138,21 +127,33 @@
 
     	$result = mysql_query("SELECT id FROM MaxPersonID;", $db_connection);
     	$maxID = mysql_fetch_row($result);
-    	
-        if($DOBString != NULL and $DODString != NULL)
-    	   $query = "INSERT INTO Actor (id, last, first, sex, dob, dod) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $gender . ", " . $DOBString .", " . $DODString. ")";
-        else if($DODString != NULL and $DOBString == NULL)
-            $query = "INSERT INTO Actor (id, last, first, sex, dod) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $gender . ", "  . $DODString. ")";
-        else if ($DOBString != NULL and $DODString == NULL)
-            $query = "INSERT INTO Actor (id, last, first, sex, dob) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $gender . ", " . $DOBString . ")";
-        else
-            $query = "INSERT INTO Actor (id, last, first, sex) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $gender .  ")";
+    	$query = "Query is not yet set";
+        if($type == "Actor"){
+            if($DOBString != NULL and $DODString != NULL)
+        	   $query = "INSERT INTO Actor (id, last, first, sex, dob, dod) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $gender . ", " . $DOBString .", " . $DODString. ")";
+            else if($DODString != NULL and $DOBString == NULL)
+                $query = "INSERT INTO Actor (id, last, first, sex, dod) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $gender . ", "  . $DODString. ")";
+            else if ($DOBString != NULL and $DODString == NULL)
+                $query = "INSERT INTO Actor (id, last, first, sex, dob) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $gender . ", " . $DOBString . ")";
+            else
+                $query = "INSERT INTO Actor (id, last, first, sex) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $gender .  ")";
+        }
+        else if($type == "Director")
+        {   
+            if($DOBString != NULL and $DODString != NULL)
+               $query = "INSERT INTO Director (id, last, first, dob, dod) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $DOBString .", " . $DODString. ")";
+            else if($DODString != NULL and $DOBString == NULL)
+                $query = "INSERT INTO Director (id, last, first, dod) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $DODString. ")";
+            else if ($DOBString != NULL and $DODString == NULL)
+                $query = "INSERT INTO Director (id, last, first, dob) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ", " . $DOBString . ")";
+            else
+                $query = "INSERT INTO Director (id, last, first) VALUES (" . $maxID[0] . ", " . $lastname . ", " . $firstname . ")";
+    
+        }
     	$added = mysql_query($query, $db_connection);
 
     		echo '<br>';
     	 	echo $query;
-    	 	echo '<br>';
-    	 	echo $maxID[0];
     	 	echo '<br>';
 
 
