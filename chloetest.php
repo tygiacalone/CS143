@@ -42,7 +42,7 @@
 
     $db_connection = mysql_connect( 'localhost', 'cs143', '');
  
-    mysql_select_db('TEST', $db_connection);
+    mysql_select_db('CS143', $db_connection);
 
     if (!$db_connection) {
 	$err = mysql_erro($db_connection);
@@ -53,12 +53,14 @@
 	$firstname = "\"".$_GET['firstname']."\"";
 	//echo $firstname;
     }
-    else echo "POOP NO FIRST NAME";
+    else $firstname = "\"\"";
+
 
     if (!empty($_GET['lastname'])) {
 	$lastname = "\"". $_GET['lastname']."\"";
 	//echo $lastname;
     }
+    else $lastname = "\"\"";
 
     if (!empty($_GET['type'])) {
     $type = $_GET['type'];
