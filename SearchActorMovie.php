@@ -63,7 +63,9 @@
         //Print movie's titles:
         $titleResult = mysql_query($movTitleQuery, $db_connection);
         $title = mysql_fetch_row($titleResult);
-        echo "--  " .$title[0] .'<br>';
+        //echo "--  " .$title[0] .'<br>';
+        $title2 = $title[0];
+        print "<a href=\"ShowActor.php?mid=$movId\">$title2</a><br>";
      }
 
     $aidresult = mysql_query($aidquery, $db_connection);
@@ -79,7 +81,10 @@
         //Print movie's titles:
         $nameResult = mysql_query($actorTitleQuery, $db_connection);
         $name = mysql_fetch_row($nameResult);
-        echo "--  " . $name[0] .'<br>';
+        //echo "--  " . $name[0] .'<br>';
+        $name2 = $name[0];
+        print "<a href=\"ShowActor.php?aid=$actId\">$name2</a><br>";
+        //<a href="url">link text</a>
      }
 
     // $aidresult = mysql_query($aidquery, $db_connection);
