@@ -65,7 +65,7 @@
         $title = mysql_fetch_row($titleResult);
         //echo "--  " .$title[0] .'<br>';
         $title2 = $title[0];
-        print "<a href=\"ShowActor.php?mid=$movId\">$title2</a><br>";
+        print "<a href=\"ShowMovie.php?mid=$movId\">$title2</a><br>";
      }
 
     $aidresult = mysql_query($aidquery, $db_connection);
