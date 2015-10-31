@@ -1,14 +1,15 @@
+
+
+
 <!DOCTYPE html>
 <html>
     <title>CS143 Project 1C</title>
 <body>
     <h1>CS 143 Database Search</h1>
-    <h2>Add Movie/Actor Relation</h2>
+    <h2>Add Movie/Director Relation</h2>
 
     <form method="get" action="<?php echo $_SERVER["PHP_SELF"];?>">
-
-
-	Movie Title:
+Movie Title:
 	<select name="title">
 	  <option value="">Select...</option>
 	  <?php
@@ -36,8 +37,8 @@
 	</p>
 
 	<p>
-	Actor Name:
-	<select name="Actor">
+	Director Name:
+	<select name="Director">
 	  <option value="">Select...</option>
 	  <?php
 
@@ -48,7 +49,7 @@
     		echo "Connection failed to database: $err <br>";
     	 }
 
-		 $sql = "SELECT CONCAT(first, \" \", last ,\"  (\", dob, \")\" ) FROM Actor";
+		 $sql = "SELECT CONCAT(first, \" \", last ,\"  (\", dob, \")\" ) FROM Director";
 		
 		 $result = mysql_query($sql, $db_connection);
 
@@ -62,17 +63,11 @@
 	  ?>
 	</select>
 	</p>
-
-	Role: <input type="text" name="role"> <br>
-
-
-    <br> <br>
+	<br> <br>
 	<input type="submit">
     </form>
 </body>
 </html>
-
-
 
 <?php
     ini_set('display_errors', 1);
@@ -93,45 +88,50 @@
     }
     else $title = "\"\"";
 
-    if (!empty($_GET['Actor'])) {
-    $actor = "\"".$_GET['Actor']."\"";
-    //echo $actor;
+
+    if (!empty($_GET['Director'])) {
+    $director = "\"".$_GET['Director']."\"";
+    //echo $director;
     }
-    else $actor = "\"\"";
+    else $director = "\"\"";
     
-    if (!empty($_GET['role'])) {
-    $role = "\"".$_GET['role']."\"";
-    //echo $role;
-    }
-    else $role = "\"\"";
-
-    
-    //$query = "INSERT INTO MovieActor VALUES (SELECT)";
-
-
     $midquery = "SELECT id FROM Movie WHERE title = " . $title.";"; 
     //echo '<br>' .$midquery. '<br>'  ;
-    $aidquery = "SELECT id FROM Actor WHERE CONCAT(first, \" \", last ,\"  (\", dob, \")\" ) = " . $actor . ";";       
-    //echo '<br>' .$aidquery. '<br>'  ;
+    $didquery = "SELECT id FROM Director WHERE CONCAT(first, \" \", last ,\"  (\", dob, \")\" ) = " . $director . ";";       
+    //echo '<br>' .$didquery. '<br>'  ;
 
-    
-    
-   
+
     $midresult = mysql_query($midquery, $db_connection);
     $mid = mysql_fetch_row($midresult);
     //echo '<br>' . $mid[0] . '<br>'  ;
 
-    $aidresult = mysql_query($aidquery, $db_connection);
-    $aid = mysql_fetch_row($aidresult);
-    //echo '<br>' . $aid[0] . '<br>'  ;
+    $didresult = mysql_query($didquery, $db_connection);
+    $did = mysql_fetch_row($didresult);
+    //echo '<br>' . $did[0] . '<br>'  ;
 
-    $query = "INSERT INTO MovieActor VALUES (" . $mid[0] . ", " . $aid[0] . ", " . $role .");";
+
+    $query = "INSERT INTO MovieDirector VALUES (" . $mid[0] . ", " . $did[0] .");";
     echo '<br>'.$query .'<br>';
   	
   	$added = mysql_query($query, $db_connection);
 
     mysql_close($db_connection);
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
