@@ -35,9 +35,10 @@
       
     $moviequery = "select m.role as role, Movie.title as movie, m.mid as link from (SELECT mid, role from MovieActor where aid = " . $aid . ") as m JOIN Movie ON m.mid = Movie.id" . ";";
       
+      /*
 	echo 'Your query was: ' . $query;
 	echo '<br>';
-
+*/
     echo '<h3>Actor Info:</h3>';
     if (strlen($query)) {
       // Logic here...
