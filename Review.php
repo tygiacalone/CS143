@@ -27,11 +27,11 @@
     <textarea rows="10" cols="80" type="text" name="review"> </textarea>
     <br>
     Score:  
-    <input type="radio" name="score" value="1" checked>1
-    <input type="radio" name="score" value="2">2
-    <input type="radio" name="score" value="3">3
-    <input type="radio" name="score" value="4">4
-    <input type="radio" name="score" value="5">5
+    <input type="radio" name="score" value="1" checked>1 - Terrible
+    <input type="radio" name="score" value="2">2 - Poor
+    <input type="radio" name="score" value="3">3 - Average
+    <input type="radio" name="score" value="4">4 - Very Good
+    <input type="radio" name="score" value="5">5 - Excellent
     <br>
 	
 	<input type="submit">
