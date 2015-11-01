@@ -5,9 +5,8 @@
   
 <!-- NAV BAR -->
   <nav style="display: inline block; max-width: 30%; float: left;">
-      <ul><a href="/~cs143/AddDirector.php">Add Director</a></ul>
       <ul><a href="/~cs143/AddMovie.php">Add Movie</a></ul>
-      <ul><a href="/~cs143/AddActor.php">Add Actor</a></ul>
+      <ul><a href="/~cs143/AddActor.php">Add Actor or Director</a></ul>
       <ul><a href="/~cs143/AddMovieActor.php">Add Movie/Actor</a></ul>
       <ul><a href="/~cs143/AddMovieDirector.php">Add Movie/Director</a></ul>
       <ul><a href="/~cs143/SearchActorMovie.php">Search Actor/Movie</a></ul>
