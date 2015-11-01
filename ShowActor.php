@@ -65,7 +65,21 @@
       while($row) {
           echo '<tr>';
           foreach( array_keys($row) as $val) {
-          echo '<td>' . $row[$val] . '</td>'; 
+            echo '<td>';
+            $movie = 'movie';
+            
+            if ($val == "date of death"){
+              if (!strlen($row[$val])) //If length zero
+                echo "Still alive";
+              else
+                echo $row[$val];
+              echo "<br>";
+            } 
+            else {
+              echo $row[$val]; 
+            }
+            
+            echo '</td>';
           }
           echo '</tr>';
           $row = mysql_fetch_assoc($result);
@@ -107,12 +121,15 @@
           foreach( array_keys($row) as $val) {
             echo '<td>';
             $movie = 'movie';
+            
             if ($val == "link"){
               print "<a href=\"ShowMovie.php?mid=$row[$val]\">$row[$movie]</a><br>";
               echo "<br>";
-            } else {
+            } 
+            else {
               echo $row[$val]; 
             }
+            
             echo '</td>';
           }
           echo '</tr>';
