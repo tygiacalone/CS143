@@ -42,7 +42,8 @@
 	<input type="text" name="dmonth">
     <input type="text" name="dyear">
 	<br>
-	
+	<br>
+    <br>
 	<input type="submit">
     </form>
 
@@ -76,13 +77,15 @@
     $type = $_GET['type'];
     //echo $type;
     }
+    else $type = "\"\"";
 
     if (!empty($_GET['gender'])) {
 	$gender = "\"".$_GET['gender']."\"";
 	//echo $gender;
     }
+    else $gender = "\"\"";
 
-    $gender = "\"" . $_GET['sex'] . "\"";
+    //$gender = "\"" . $_GET['sex'] . "\"";
     //print $gender;
 
     // Format for DOB: "YYYY-MM-DD"
@@ -90,21 +93,25 @@
 	$bday = $_GET['bday'];
 	//echo $bday;
     }
+    
 
     if (!empty($_GET['bmonth'])) {
 	$bmonth = $_GET['bmonth'];
 	//echo $bmonth;
     }
+    
 
     if (!empty($_GET['byear'])) {
 	$byear = $_GET['byear'];
 	//echo $byear;
     }
+    
 
     if (!empty($_GET['dday'])) {
     $dday = $_GET['dday'];
     //echo $dday;
     }
+    
 
     if (!empty($_GET['dmonth'])) {
     $dmonth = $_GET['dmonth'];
@@ -115,6 +122,7 @@
     $dyear = $_GET['dyear'];
     //echo $dyear;
     }
+
 
     // if (strlen($query)) {
 	    // Logic here...
@@ -132,7 +140,7 @@
         if (isset($dyear) and isset($dday) and isset($dmonth))
         {
             $DODString = "\"" . $dyear . "-" . $dmonth . "-" . $dday . "\"";
-            echo '<br>' . $DODString;
+           // echo '<br>' . $DODString;
         }   
         else
             $DODString = NULL;
@@ -165,7 +173,8 @@
     	$added = mysql_query($query, $db_connection);
 
     		echo '<br>';
-    	 	echo $query;
+    	 	//echo $query;
+            echo "Added " . $type . "!";
     	 	echo '<br>';
 
 
@@ -176,7 +185,7 @@
     	$newmaxID = mysql_fetch_row($result2);
 
 
-    	echo "New maxID: " .  $newmaxID[0];
+    	//echo "New maxID: " .  $newmaxID[0];
 
     	 //$result = mysql_query($query, $db_connection);
     	 

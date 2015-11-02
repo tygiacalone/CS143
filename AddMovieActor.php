@@ -136,7 +136,8 @@
     //echo '<br>' . $aid[0] . '<br>'  ;
 
     $query = "INSERT INTO MovieActor VALUES (" . $mid[0] . ", " . $aid[0] . ", " . $role .");";
-    echo '<br>'.$query .'<br>';
+   // echo '<br>'.$query .'<br>';
+     echo '<br>'."Added Actor/Movie relation!" .'<br>';
   	
   	$added = mysql_query($query, $db_connection);
 

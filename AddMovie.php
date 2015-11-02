@@ -92,7 +92,8 @@
  
     $added = mysql_query($query, $db_connection);
 
-    echo '<br>'.$query .'<br>';
+    //echo '<br>'.$query .'<br>';
+    echo "Added Movie!";
     //Update MaxPersonID:
     $updateMax = "UPDATE MaxMovieID SET id = id + 1 ;" ;
     mysql_query($updateMax, $db_connection);

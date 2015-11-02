@@ -118,7 +118,8 @@ Movie Title:
 
 
     $query = "INSERT INTO MovieDirector VALUES (" . $mid[0] . ", " . $did[0] .");";
-    echo '<br>'.$query .'<br>';
+    //echo '<br>'.$query .'<br>';
+    echo '<br>'."Added Movie/Director relation!" .'<br>';
   	
   	$added = mysql_query($query, $db_connection);
 
