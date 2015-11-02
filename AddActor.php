@@ -21,11 +21,11 @@
     First name: <input type="text" name="firstname"> <br>
     Last name: <input type="text" name="lastname"> <br>
     Profession:  
-    <input type="radio" name="type" value="Actor" checked>Actor
+    <input type="radio" name="type" value="Actor">Actor
     <input type="radio" name="type" value="Director">Director
     <br>
    	Gender: 
-    <input type="radio" name="sex" value="Male" checked>Male
+    <input type="radio" name="sex" value="Male">Male
     <input type="radio" name="sex" value="Female">Female
     <br>
 	Birth Month:
@@ -74,7 +74,7 @@
 
     if (!empty($_GET['type'])) {
     $type = $_GET['type'];
-    //echo $type;
+    echo $type;
     }
 
     if (!empty($_GET['gender'])) {
