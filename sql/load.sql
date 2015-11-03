@@ -1,0 +1,43 @@
+LOAD DATA LOCAL INFILE '~/data/movie.del' INTO TABLE Movie FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+LOAD DATA LOCAL INFILE '~/data/actor1.del' INTO TABLE Actor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+
+LOAD DATA LOCAL INFILE '~/data/actor2.del'INTO TABLE Actor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+LOAD DATA LOCAL INFILE '~/data/actor3.del' INTO TABLE Actor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+LOAD DATA LOCAL INFILE '~/data/director.del' INTO TABLE Director FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+LOAD DATA LOCAL INFILE '~/data/moviegenre.del' INTO TABLE MovieGenre FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+LOAD DATA LOCAL INFILE '~/data/moviedirector.del' INTO TABLE MovieDirector FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+LOAD DATA LOCAL INFILE '~/data/movieactor1.del' INTO TABLE MovieActor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+LOAD DATA LOCAL INFILE '~/data/movieactor2.del' INTO TABLE MovieActor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
+
+INSERT INTO MaxPersonID(id)
+VALUES (69000); /* used to be smaller but changed for 1c */
+
+INSERT INTO MaxMovieID(id)
+VALUES (69000);
+
+/*
+INSERT INTO MaxPersonID(id)
+VALUES((
+       SELECT MAX(id) 
+       FROM (
+       	    SELECT MAX(id) + 1 as id
+	    FROM Actor
+
+	    UNION
+
+	    SELECT MAX(id) + 1 as id
+	    FROM Director
+            ) as maxID
+));
+
+INSERT INTO MaxMovieID(id)
+VALUES ((SELECT MAX(id) FROM Movie));
+*/
