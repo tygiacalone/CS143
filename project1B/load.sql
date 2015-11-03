@@ -18,7 +18,7 @@ LOAD DATA LOCAL INFILE '~/data/movieactor1.del' INTO TABLE MovieActor FIELDS TER
 LOAD DATA LOCAL INFILE '~/data/movieactor2.del' INTO TABLE MovieActor FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ;
 
 INSERT INTO MaxPersonID(id)
-VALUES (4750);
+VALUES (69000); /* used to be smaller but changed for 1c */
 
 INSERT INTO MaxMovieID(id)
 VALUES (69000);

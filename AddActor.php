@@ -27,19 +27,17 @@
    	Gender: 
     <input type="radio" name="sex" value="Male">Male
     <input type="radio" name="sex" value="Female">Female
-    <br>
-	Birth Month:
 	
 
 	<br>
     Date of Birth: (MM DD YYYY)<br>
-	<input type="text" name="bday">
 	<input type="text" name="bmonth">
+	<input type="text" name="bday">
 	<input type="text" name="byear">
 	<br>
     Date of Death: (MM DD YYYY) <br>
-	<input type="text" name="dday">
 	<input type="text" name="dmonth">
+	<input type="text" name="dday">
     <input type="text" name="dyear">
 	<br>
 	<br>
@@ -75,15 +73,16 @@
 
     if (!empty($_GET['type'])) {
     $type = $_GET['type'];
-    echo $type;
+    //echo $type;
     }
     else $type = "\"\"";
 
-    if (!empty($_GET['gender'])) {
-	$gender = "\"".$_GET['gender']."\"";
-	//echo $gender;
+    if (!empty($_GET['sex'])) {
+	$gender = "\"".$_GET['sex']."\"";
+	echo "gender is " .$gender;
     }
     else $gender = "\"\"";
+
 
     //$gender = "\"" . $_GET['sex'] . "\"";
     //print $gender;
@@ -173,7 +172,8 @@
     	$added = mysql_query($query, $db_connection);
 
     		echo '<br>';
-    	 	//echo $query;
+    	 	echo $query;
+            echo '<br>';
             echo "Added " . $type . "!";
     	 	echo '<br>';
 
