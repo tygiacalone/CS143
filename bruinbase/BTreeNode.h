@@ -13,11 +13,15 @@
 #include "RecordFile.h"
 #include "PageFile.h"
 
+#include <stdio.h>
+
 /**
  * BTLeafNode: The class representing a B+tree leaf node.
  */
 class BTLeafNode {
   public:
+    
+    BTLeafNode();
    /**
     * Insert the (key, rid) pair to the node.
     * Remember that all keys inside a B+tree node should be kept sorted.
@@ -104,6 +108,7 @@ class BTLeafNode {
     * that contains the node.
     */
     char buffer[PageFile::PAGE_SIZE];
+    int maxNumKeys;
 }; 
 
 
@@ -182,6 +187,13 @@ class BTNonLeafNode {
     * that contains the node.
     */
     char buffer[PageFile::PAGE_SIZE];
-}; 
+    int maxNumKeys;
+
+};
+struct nEntry
+{
+    int key;
+    const RecordId & rid;
+};
 
 #endif /* BTREENODE_H */
