@@ -110,6 +110,17 @@ class BTLeafNode {
     */
     char buffer[PageFile::PAGE_SIZE];
     int maxNumKeys;
+    
+    struct nEntry
+    {
+        nEntry()
+        {
+            rid = NULL;
+        }
+        int key;
+        RecordId * rid;
+        
+    };
 
 }; 
 
@@ -119,6 +130,9 @@ class BTLeafNode {
  */
 class BTNonLeafNode {
   public:
+    
+    BTNonLeafNode();
+
    /**
     * Insert a (key, pid) pair to the node.
     * Remember that all keys inside a B+tree node should be kept sorted.
@@ -190,12 +204,19 @@ class BTNonLeafNode {
     */
     char buffer[PageFile::PAGE_SIZE];
     int maxNumKeys;
+    
+    struct nEntry
+    {
+        nEntry()
+        {
+            pid = NULL;
+        }
+        int key;
+        PageId * pid;
+        
+    };
 
-};
-struct nEntry
-{
-    int key;
-    RecordId * rid;
+
 };
 
 #endif /* BTREENODE_H */
