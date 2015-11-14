@@ -292,10 +292,10 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
  */
 RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid) //Chloe
 {
-    eid = getKeyCOunt() - 1;
-    nEntry* ne = (nEntry*)buffer + eid;
+    pid = getKeyCount() - 1;
+    nEntry* ne = (nEntry*)buffer + pid;
     
-    for(; eid >=; eid--)
+    for(; pid >= 0; pid--)
     {
         if(ne->key <= searchKey)
             break;
@@ -303,7 +303,7 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid) //Chloe
             ne--;
     }
     
-    if(eid < 0)
+    if(pid < 0)
         return RC_NO_SUCH_RECORD;
     
     
