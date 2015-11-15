@@ -113,12 +113,14 @@ class BTLeafNode {
     
     struct nEntry
     {
+        int key;
+        RecordId * rid;
+
         nEntry()
         {
             rid = NULL;
         }
-        int key;
-        RecordId * rid;
+
         
     };
 

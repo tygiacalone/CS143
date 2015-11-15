@@ -1,5 +1,5 @@
 #include "BTreeNode.h"
-
+#include <iostream>
 using namespace std;
 
 BTLeafNode::BTLeafNode()
@@ -149,7 +149,48 @@ RC BTLeafNode::locate(int searchKey, int& eid) //Chloe
  * @return 0 if successful. Return an error code if there is an error.
  */
 RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
-{ return 0; }
+{
+    // If you can't find the file to read, return err
+    int maxEntries = getKeyCount();
+    int offset = sizeof(nEntry) * eid;
+    nEntry read;
+
+    /*
+    cout << "maxEntries: " << maxEntries << endl;
+    cout << "eid: " << eid << endl;
+    cout << "offset: " << offset << endl;
+    */
+/* Print out all the key, rid pairs for testing
+    int count = 0;
+    while (count < maxEntries) {
+        nEntry tmp;
+        memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
+
+        cout << "key: " << tmp.key << endl;
+        cout << "rid: sid: " << tmp.rid->pid << " pid: " << tmp.rid->sid << endl;
+
+        count++;
+    }
+*/
+    if (eid > maxEntries || eid < 0) return RC_INVALID_CURSOR;
+
+    memcpy(&read, buffer + offset, sizeof(nEntry));
+
+    RecordId * read_rid = new RecordId;
+    read_rid = read.rid;
+
+    //NOTE: NOT SURE ABOUT MEM ALLOCATION FOR RID HERE?!
+    RecordId * riid = new RecordId;
+    riid = read.rid;
+
+    key = read.key;
+    rid.pid = riid->pid;
+    rid.sid = riid->sid;
+
+    //cout << "read: " << read.key << " saved: " << key << endl;
+
+    return 0;
+}
 
 /*
  * Return the pid of the next slibling node.
@@ -292,10 +333,10 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
  */
 RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid) //Chloe
 {
-    eid = getKeyCOunt() - 1;
-    nEntry* ne = (nEntry*)buffer + eid;
-    
-    for(; eid >=; eid--)
+    pid = getKeyCount() - 1;
+    nEntry* ne = (nEntry*)buffer + pid;
+
+    for(; pid >= 0; pid--)
     {
         if(ne->key <= searchKey)
             break;
@@ -303,9 +344,8 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid) //Chloe
             ne--;
     }
     
-    if(eid < 0)
+    if(pid < 0)
         return RC_NO_SUCH_RECORD;
-    
     
     return 0;
 }
@@ -318,4 +358,18 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid) //Chloe
  * @return 0 if successful. Return an error code if there is an error.
  */
 RC BTNonLeafNode::initializeRoot(PageId pid1, int key, PageId pid2) //Ty
-{ return 0; }
+{
+    int pid_size = sizeof(PageId);
+
+    // Reset buffer to 0 for initialization
+    memset(buffer, 0, PageFile::PAGE_SIZE);
+
+    // Set first pid
+    memset(buffer, pid1, pid_size);
+
+    // Insert key, pid2 pair check for error.
+    if (insert(key, pid2))
+        return RC_FILE_WRITE_FAILED;
+
+    return 0;
+}
