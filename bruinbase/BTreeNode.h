@@ -114,11 +114,12 @@ class BTLeafNode {
     struct nEntry
     {
         int key;
-        RecordId * rid;
+        RecordId rid;
 
         nEntry()
         {
-            rid = NULL;
+            rid.pid = 0;
+            rid.sid = 0;
         }
 
         
@@ -209,12 +210,14 @@ class BTNonLeafNode {
     
     struct nEntry
     {
+
+        int key;
+        PageId pid;
+
         nEntry()
         {
-            pid = NULL;
+            pid = 0;
         }
-        int key;
-        PageId * pid;
         
     };
 

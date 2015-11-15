@@ -1,4 +1,5 @@
 #include "BTreeNode.h"
+#include "RecordFile.h"
 #include <iostream>
 using namespace std;
 
@@ -42,7 +43,7 @@ int BTLeafNode::getKeyCount()
 {
     int total = 0;
     nEntry *ne = (nEntry *) buffer;
-    while((total < maxNumKeys) &&( ne->rid != NULL))
+    while((total < maxNumKeys) &&( ne->rid.pid != 0))
     {
         total++;
         ne++;
@@ -86,12 +87,13 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
     }
     
     newEntry->key = key;
+
+
     //NOTE: NOT SURE ABOUT MEM ALLOCATION FOR RID HERE?!
     RecordId * riid = new RecordId;
     *riid = rid;
-    newEntry->rid = riid;
 
-    
+    newEntry->rid = *riid;
     
     return 0;
 }
@@ -106,10 +108,65 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
  * @param siblingKey[OUT] the first key in the sibling node after split.
  * @return 0 if successful. Return an error code if there is an error.
  */
-RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, 
-                              BTLeafNode& sibling, int& siblingKey) //Ty
+RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling, int& siblingKey) //Ty
 {   //TY: When you are inserting rid into nEntry, be careful of the memory allocation. I made a new rid but I'm not sure if I did it properly/ how to test it so lmk what you think
-    return 0; }
+
+    cout << "in func" << endl;
+    cout << "key count: " << getKeyCount() << endl;
+    cout << "max keys: " << maxNumKeys << endl;
+    // sibling MUST be empty
+    if (sibling.getKeyCount() != 0) {
+        return RC_INVALID_ATTRIBUTE;
+    }
+
+    // Not time to split yet
+    if (getKeyCount() < maxNumKeys) {
+        return RC_FILE_WRITE_FAILED;
+    }
+
+    // Create entry to insert
+    nEntry * e = new nEntry;
+
+    e->rid.pid = rid.pid;
+    e->rid.sid = rid.sid;
+    e->key = key;
+
+    int keyCount = getKeyCount();
+    int half = maxNumKeys/2;
+
+    int offset = half * sizeof(nEntry);
+    int max = maxNumKeys * sizeof(nEntry);
+    int incr = sizeof(nEntry);
+    bool firstLoop = true;
+
+    // Copy right half of node to sibling
+    while(offset < max) {
+
+        nEntry * siblingNode = new nEntry;
+        memcpy(siblingNode, buffer+offset, sizeof(nEntry));
+
+        sibling.insert(siblingNode->key, siblingNode->rid);
+
+        if(firstLoop) {
+            siblingKey = siblingNode->key;
+            firstLoop = false;
+        }
+
+        offset += incr;
+    }
+
+    // Reset right half to 0
+    offset = half * sizeof(nEntry);
+    memset(buffer+offset, 0, PageFile::PAGE_SIZE - offset);
+
+    // If key is less than the leftMost sibling key, insert into original node
+    if(key < siblingKey)
+        insert(key, rid);
+    else
+        sibling.insert(key, rid);
+
+    return 0;
+}
 
 /**
  * If searchKey exists in the node, set eid to the index entry
@@ -160,32 +217,33 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
     cout << "eid: " << eid << endl;
     cout << "offset: " << offset << endl;
     */
-/* Print out all the key, rid pairs for testing
+
+    // Print out all the key, rid pairs for testing
     int count = 0;
     while (count < maxEntries) {
         nEntry tmp;
         memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
 
         cout << "key: " << tmp.key << endl;
-        cout << "rid: sid: " << tmp.rid->pid << " pid: " << tmp.rid->sid << endl;
+        cout << "rid: sid: " << tmp.rid.pid << " pid: " << tmp.rid.sid << endl;
 
         count++;
     }
-*/
+
     if (eid > maxEntries || eid < 0) return RC_INVALID_CURSOR;
 
     memcpy(&read, buffer + offset, sizeof(nEntry));
 
     RecordId * read_rid = new RecordId;
-    read_rid = read.rid;
+    read_rid = &read.rid;
 
     //NOTE: NOT SURE ABOUT MEM ALLOCATION FOR RID HERE?!
     RecordId * riid = new RecordId;
-    riid = read.rid;
+    riid = &read.rid;
 
     key = read.key;
-    rid.pid = riid->pid;
-    rid.sid = riid->sid;
+    rid.pid = read_rid->pid;
+    rid.sid = read_rid->sid;
 
     //cout << "read: " << read.key << " saved: " << key << endl;
 
@@ -254,7 +312,7 @@ int BTNonLeafNode::getKeyCount() //Ty
 {
     int total = 0;
     nEntry *ne = (nEntry *) buffer;
-    while((total < maxNumKeys) &&( ne->pid != NULL))
+    while((total < maxNumKeys) &&( ne->pid != 0))
     {
         total++;
         ne++;
@@ -299,13 +357,29 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
     }
     
     newEntry->key = key;
+
     //NOTE: NOT SURE ABOUT MEM ALLOCATION FOR PID HERE?!
     PageId * piid = new PageId;
     *piid = pid;
-    newEntry->pid = piid;
-    
-    
-    
+
+    newEntry->pid = *piid;
+
+    cout << "\nInserted: " << endl;
+    int count1 = 0;
+    while (count1 < maxNumKeys) {
+        nEntry tmp;
+        memcpy(&tmp, sizeof(PageId)+buffer + count1 * sizeof(nEntry), sizeof(nEntry));
+
+        if(tmp.key == 0)
+            break;
+        cout << "key: " << tmp.key << endl;
+        cout << "pid: " << tmp.pid << endl;
+        cout << endl;
+
+        count1++;
+    }
+
+
     return 0;
 }
 
@@ -321,6 +395,98 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
  */
 RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, int& midKey) //Ty
 {
+    cout << "in func" << endl;
+    cout << "key count: " << getKeyCount() << endl;
+    cout << "max keys: " << maxNumKeys << endl;
+    // sibling MUST be empty
+    if (sibling.getKeyCount() != 0) {
+        return RC_INVALID_ATTRIBUTE;
+    }
+
+    // Not time to split yet
+    if (getKeyCount() < maxNumKeys) {
+        return RC_FILE_WRITE_FAILED;
+    }
+
+
+    cout << "\nBefore: " << endl;
+    int count1 = 0;
+    while (count1 < maxNumKeys) {
+        nEntry tmp;
+        memcpy(&tmp,  sizeof(PageId)+buffer + count1 * sizeof(nEntry), sizeof(nEntry));
+
+        cout << "key: " << tmp.key << endl;
+        cout << "pid: " << tmp.pid << endl;
+
+        count1++;
+    }
+
+    // Create entry to insert
+    nEntry * e = new nEntry;
+
+    e->pid = pid;
+    e->key = key;
+
+    int keyCount = getKeyCount();
+    int half = maxNumKeys/2;
+    ;
+    int offset = half * sizeof(nEntry);
+    int max = maxNumKeys * sizeof(nEntry);
+    int incr = sizeof(nEntry);
+    bool firstLoop = true;
+
+    // Copy right half of node to sibling
+    while(offset < max) {
+
+        nEntry * siblingNode = new nEntry;
+        memcpy(siblingNode, sizeof(PageId)+buffer+offset, sizeof(nEntry));
+
+        //cout << "key: " << siblingNode->key << endl;
+        if(firstLoop) {
+            midKey = siblingNode->key;
+            firstLoop = false;
+        }
+
+        sibling.insert(siblingNode->key, siblingNode->pid);
+
+        offset += incr;
+    }
+
+    // Reset right half to 0
+    offset = half * sizeof(nEntry);
+    memset(buffer+offset, 0, PageFile::PAGE_SIZE - offset);
+
+    // If key is less than the leftMost sibling key, insert into original node
+    if(key < midKey)
+        insert(key, pid);
+    else
+        sibling.insert(key, pid);
+
+
+    int count = 0;
+    cout << "\nAfter: " << endl;\
+    while (count < maxNumKeys) {
+        nEntry tmp;
+        memcpy(&tmp, sizeof(PageId)+ buffer + count * sizeof(nEntry), sizeof(nEntry));
+
+        cout << "key: " << tmp.key << endl;
+        cout << "pid: " << tmp.pid << endl;
+
+        count++;
+    }
+
+    count = 0;
+    cout << "\nSibling: " << endl;
+    while (count < maxNumKeys) {
+        nEntry tmp;
+        memcpy(&tmp, sizeof(PageId)+sibling.buffer + count * sizeof(nEntry), sizeof(nEntry));
+
+        cout << "key: " << tmp.key << endl;
+        cout << "pid: " << tmp.pid << endl;
+
+        count++;
+    }
+
     return 0;
 }
 

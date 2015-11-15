@@ -134,15 +134,18 @@ int main()
     blah.readEntry(3, key2, rid2);
     cout << "Entry at specified eid has key=" << key2 << " and pid=" << rid2.pid << " and sid=" << rid2.sid << endl;
     //This should stop after we fill up the entire blah buffer (produces maybe 4 errors or so)
-    for(int j=0; j<62; j++)
-      blah.insert(101, (RecordId){0,0});
+    for(int j=0; j<1000; j++)
+      blah.insert(101, (RecordId){1,1});
 
     int blah2Key = -1;
-    blah.insertAndSplit(99, (RecordId){9000, 9001}, blah2, blah2Key);
+    cout << blah.insertAndSplit(102, (RecordId){9000, 9001}, blah2, blah2Key) << endl;
 
     cout << "blah has numKeys " << blah.getKeyCount() << " and blah2 has numKeys " << blah2.getKeyCount() << endl;
     cout << "blah2's first entry is now key: " << blah2Key << endl;
 
+    //cout << "first node :\n" << blah.readEntry(0, key2, rid2);
+    //cout << "second node :\n" << blah2.readEntry(0, key2, rid2);
+/*
     int eid3 = -1;
     blah.locate(99, eid3);
 
@@ -172,7 +175,7 @@ int main()
     //Insert to root and verify number of keys
     root.insert(999, 2);
     cout << "After insert, root node has numKeys: " << root.getKeyCount() << endl;
-/*
+
     //Try to insertAndSplit (this should fail)
     BTNonLeafNode sibling;
     int median = -1;
@@ -183,8 +186,8 @@ int main()
     //Check child pointers
     PageId rootPid = -1;
 
-    root.locateChildPtr(50, rootPid);
-    cout << "50 has child pointer: " << rootPid << endl;
+    root.locateChildPtr(99, rootPid);
+    cout << "99 has child pointer: " << rootPid << endl;
 
     root.locateChildPtr(500, rootPid);
     cout << "500 has child pointer: " << rootPid << endl;
@@ -202,16 +205,24 @@ int main()
 
     cout << "root node has numKeys: " << root.getKeyCount() << endl;
 
-    root.insertAndSplit(99999, 6, sibling, median);
+    root.insertAndSplit(-3, 6, sibling, median);
     cout << "After insertAndSplit, root node has numKeys: " << root.getKeyCount() << endl;
     cout << "After insertAndSplit, sibling node has numKeys: " << sibling.getKeyCount() << endl;
     cout << "Median: " << median << endl;
+*/
 
     //Let's test for median more accurately
     BTNonLeafNode root2;
-    root2.initializeRoot(0,2,1);
+    root2.initializeRoot(666,6,13);
+
+    root2.insert(7,10);
+    root2.insert(8,11);
+    root2.insert(2,12);
+
+/*
     for(int k=0; k<127; k++)
       root2.insert(2*(k+2),2);
+
     //Currently, root2 looks something like  (2, 4, 6, 8, ..., 126, 128, 130, ..., 252, 254)
     //Median should be 128 if we insert 127 [reason: adding 127 bumps 128 up into the middle key]
     //Median should be 129 if we insert 129 [reason: 129 itself becomes the middle most key]
