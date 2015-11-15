@@ -1,0 +1,12 @@
+#include "BTreeNode.h"
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+  BTLeafNode bt;
+
+  //  RecordId rid;
+  // bt.insert(12, rid);
+}
