@@ -210,7 +210,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
         memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
 
         cout << "key: " << tmp.key << endl;
-        cout << "rid: " << tmp.rid.pid << endl;
+        cout << "pid: " << tmp.rid.pid << endl;
 
         count++;
     }
@@ -222,7 +222,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
         memcpy(&tmp, sibling.buffer + count * sizeof(nEntry), sizeof(nEntry));
 
         cout << "key: " << tmp.key << endl;
-        cout << "rid: " << tmp.rid.pid << endl;
+        cout << "pid: " << tmp.rid.pid << endl;
 
         count++;
     }
