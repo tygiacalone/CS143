@@ -213,7 +213,7 @@ int main()
     cout << "Median: " << median << endl;
 */
 
-  cout << "Testing leaf node: " << endl;
+  cout << endl<<  "Testing leaf node: " << endl;
 
   BTLeafNode leaf;
 
@@ -223,9 +223,9 @@ int main()
   leaf.insert(2, (RecordId){12,13} );
   leaf.insert(2, (RecordId){1,2} );
 
-  cout << "Testing NON leaf node: " << endl;
+  cout << "Testing NON NON NON leaf node: " << endl;
   BTNonLeafNode root2;
-  root2.initializeRoot(666,6,13);
+  root2.initializeRoot(666,7,13);
 
   root2.insert(7,10);
   root2.insert(8,11);

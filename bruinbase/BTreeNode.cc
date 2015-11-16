@@ -364,35 +364,37 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
         return RC_NODE_FULL;
 
     nEntry* lastEntry = (nEntry *)buffer + totalKeys;
-    nEntry* newEntry = new nEntry;
+    nEntry* newEntry = NULL;
     
     int eid = 0;
     
     //If doesn't find the key:
     if(locateChildPtr(key, eid))
     {
-        newEntry = lastEntry;
+        newEntry = (nEntry *) buffer;
     }
     else
     {
-        newEntry = (nEntry*)buffer + eid;
-        
-        //Move previous entries to the right to fit in new entry
-        while(lastEntry != newEntry)
-        {
-            nEntry* nextEntry = lastEntry - 1;
-            *lastEntry = *nextEntry;
-            lastEntry = nextEntry;
-        }
+        newEntry = (nEntry*)buffer + eid + 1;
     }
     
+        //Move previous entries to the right to fit in new entry
+    while(lastEntry != newEntry)
+    {
+        nEntry* nextEntry = lastEntry - 1;
+        *lastEntry = *nextEntry;
+        lastEntry = nextEntry;
+    }
+    
+    
     newEntry->key = key;
+    newEntry->pid = pid;
 
     //NOTE: NOT SURE ABOUT MEM ALLOCATION FOR PID HERE?!
-    PageId * piid = new PageId;
-    *piid = pid;
-
-    newEntry->pid = *piid;
+//    PageId * piid = new PageId;
+//    *piid = pid;
+//
+//    newEntry->pid = *piid;
 
     cout << "\nInserted: " << endl;
     int count1 = 0;
@@ -410,48 +412,7 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
     }
 
     return 0;
-
-    /* My attempt at a solution. Created seg fault.
-
-    nEntry * start = (nEntry *) buffer + sizeof(PageId);
-    nEntry * end = (nEntry *) buffer + (sizeof(nEntry) * totalKeys) + sizeof(PageId);
-    int incr = sizeof(nEntry);
-
-    nEntry * insert_point;
-
-    nEntry prev;
-    // Find insertion point
-    while (start < end) {
-        nEntry tmp;
-        memcpy(&tmp, start, sizeof(nEntry));
-
-        if (tmp.key == key)
-            insert_point = start;
-
-        if (key > prev.key && key < tmp.key)
-            insert_point = start;
-
-        start++;
-        prev = tmp;
-    }
-
-    //Shift everything right
-    while (end > insert_point) {
-        memcpy(end, end-sizeof(nEntry), sizeof(nEntry));
-        end--;
-    }
-
-    // Insert new value
-    nEntry * toInsert = new nEntry;
-    toInsert->key = key;
-    toInsert->pid = pid;
-
-    //
-    memcpy(insert_point, toInsert, sizeof(nEntry));
-
-    return 0;
-
-     */
+     
 
 }
 
@@ -607,7 +568,10 @@ RC BTNonLeafNode::initializeRoot(PageId pid1, int key, PageId pid2) //Ty
 
     // Insert key, pid2 pair check for error.
     if (insert(key, pid2))
+    {
+        cout<< "error inserting first node"<< endl;
         return RC_FILE_WRITE_FAILED;
+    }
 
     return 0;
 }
