@@ -143,8 +143,10 @@ int main()
     cout << "blah has numKeys " << blah.getKeyCount() << " and blah2 has numKeys " << blah2.getKeyCount() << endl;
     cout << "blah2's first entry is now key: " << blah2Key << endl;
 
-    //cout << "first node :\n" << blah.readEntry(0, key2, rid2);
-    //cout << "second node :\n" << blah2.readEntry(0, key2, rid2);
+    cout << "next node: " << blah.getNextNodePtr() << endl;
+    cout << "first node :\n" << blah.readEntry(0, key2, rid2);
+    cout << "second node :\n" << blah2.readEntry(0, key2, rid2);
+    cout << "next node: " << blah.getNextNodePtr() << endl;
 /*
     int eid3 = -1;
     blah.locate(99, eid3);
@@ -211,15 +213,18 @@ int main()
     cout << "Median: " << median << endl;
 */
 
-    //Let's test for median more accurately
     BTNonLeafNode root2;
     root2.initializeRoot(666,6,13);
 
     root2.insert(7,10);
     root2.insert(8,11);
     root2.insert(2,12);
+    root2.insert(2,12);
+    root2.insert(2,1);
 
 /*
+    //Let's test for median more accurately
+
     for(int k=0; k<127; k++)
       root2.insert(2*(k+2),2);
 

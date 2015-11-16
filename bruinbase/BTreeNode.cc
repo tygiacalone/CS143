@@ -62,7 +62,7 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
     int totalKeys = getKeyCount();
     if(totalKeys >= maxNumKeys)
         return RC_NODE_FULL;
-    
+
     nEntry* lastEntry = (nEntry *)buffer + totalKeys;
     nEntry* newEntry = new nEntry;
     
@@ -87,7 +87,6 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
     }
     
     newEntry->key = key;
-
 
     //NOTE: NOT SURE ABOUT MEM ALLOCATION FOR RID HERE?!
     RecordId * riid = new RecordId;
@@ -124,6 +123,8 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
         return RC_FILE_WRITE_FAILED;
     }
 
+    PageId nextPtr = getNextNodePtr();
+
     // Create entry to insert
     nEntry * e = new nEntry;
 
@@ -138,6 +139,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
     int max = maxNumKeys * sizeof(nEntry);
     int incr = sizeof(nEntry);
     bool firstLoop = true;
+    PageId firstSiblingPid;
 
     // Copy right half of node to sibling
     while(offset < max) {
@@ -149,6 +151,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
 
         if(firstLoop) {
             siblingKey = siblingNode->key;
+            firstSiblingPid = siblingNode->rid.pid;
             firstLoop = false;
         }
 
@@ -164,6 +167,12 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
         insert(key, rid);
     else
         sibling.insert(key, rid);
+
+    // Set pointer to sibling's first pid
+    memset((buffer + PageFile::PAGE_SIZE) - sizeof(PageId), firstSiblingPid, sizeof(PageId));
+
+    // Set pointer to sibling's next node to the old next of this node
+    memset((sibling.buffer + PageFile::PAGE_SIZE) - sizeof(PageId), nextPtr, sizeof(PageId));
 
     return 0;
 }
@@ -256,9 +265,14 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
  */
 PageId BTLeafNode::getNextNodePtr() //Chloe
 {
-    PageId* pid = (PageId *)(buffer + PageFile::PAGE_SIZE) - 1;
-    return *pid;
+    PageId pid;
+
+    // Return the last sizeof(PageId) bytes
+    memcpy(&pid, (buffer + PageFile::PAGE_SIZE) - sizeof(PageId), sizeof(PageId));
+
+    return pid;
 }
+
 
 /*
  * Set the pid of the next slibling node.
@@ -332,7 +346,7 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
     int totalKeys = getKeyCount();
     if(totalKeys >= maxNumKeys)
         return RC_NODE_FULL;
-    
+
     nEntry* lastEntry = (nEntry *)buffer + totalKeys;
     nEntry* newEntry = new nEntry;
     
@@ -379,8 +393,50 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
         count1++;
     }
 
+    return 0;
+
+    /* My attempt at a solution. Created seg fault.
+
+    nEntry * start = (nEntry *) buffer + sizeof(PageId);
+    nEntry * end = (nEntry *) buffer + (sizeof(nEntry) * totalKeys) + sizeof(PageId);
+    int incr = sizeof(nEntry);
+
+    nEntry * insert_point;
+
+    nEntry prev;
+    // Find insertion point
+    while (start < end) {
+        nEntry tmp;
+        memcpy(&tmp, start, sizeof(nEntry));
+
+        if (tmp.key == key)
+            insert_point = start;
+
+        if (key > prev.key && key < tmp.key)
+            insert_point = start;
+
+        start++;
+        prev = tmp;
+    }
+
+    //Shift everything right
+    while (end > insert_point) {
+        memcpy(end, end-sizeof(nEntry), sizeof(nEntry));
+        end--;
+    }
+
+    // Insert new value
+    nEntry * toInsert = new nEntry;
+    toInsert->key = key;
+    toInsert->pid = pid;
+
+    //
+    memcpy(insert_point, toInsert, sizeof(nEntry));
 
     return 0;
+
+     */
+
 }
 
 /*
