@@ -147,6 +147,7 @@ int main()
 
     cout << "blah has numKeys " << blah.getKeyCount() << " and blah2 has numKeys " << blah2.getKeyCount() << endl;
     cout << "blah2's first entry is now key: " << blah2Key << endl;
+    cout << "blah2's first entry is now key: " << blah2Key << endl;
 
     //cout << "first node entries:\n" << blah.readEntry(0, key2, rid2);
     //cout << "second node entries:\n" << blah2.readEntry(0, key2, rid2);
@@ -229,7 +230,7 @@ int main()
   leaf.insert(2, (RecordId){1,2} );
 
   cout << "Testing NON NON NON leaf node: " << endl;
-*/  BTNonLeafNode root2;
+  BTNonLeafNode root2;
   root2.initializeRoot(666,7,13);
 
   root2.insert(7,10);
@@ -260,7 +261,7 @@ int main()
     cout << "Median: " << median << endl;
 
   cout << "--------------------2C TESTING------------------------" << endl;
-/*  //----------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------
   //int maxEid = (PageFile::PAGE_SIZE-sizeof(PageId))/(sizeof(RecordId)+sizeof(int)); //This produces 85
   cout << sizeof(PageFile) << endl;
   cout << sizeof(PageId) << endl;

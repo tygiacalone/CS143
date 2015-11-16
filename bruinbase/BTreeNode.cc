@@ -227,7 +227,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
         count++;
     }
 
-
+    cout << "The nextNodePtr() value should be: " << firstSiblingPid << endl;
     return 0;
 }
 
