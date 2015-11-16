@@ -93,7 +93,23 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
     *riid = rid;
 
     newEntry->rid = *riid;
-    
+
+    cout << "\nInserted: " << endl;
+    int count1 = 0;
+    while (count1 < maxNumKeys) {
+        nEntry tmp;
+        memcpy(&tmp, buffer + count1 * sizeof(nEntry), sizeof(nEntry));
+
+        if(tmp.key == 0)
+            break;
+        cout << "key: " << tmp.key << endl;
+        cout << "pid: " << tmp.rid.pid << endl;
+        cout << "sid: " << tmp.rid.sid << endl;
+        cout << endl;
+
+        count1++;
+    }
+
     return 0;
 }
 

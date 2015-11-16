@@ -213,14 +213,26 @@ int main()
     cout << "Median: " << median << endl;
 */
 
-    BTNonLeafNode root2;
-    root2.initializeRoot(666,6,13);
+  cout << "Testing leaf node: " << endl;
 
-    root2.insert(7,10);
-    root2.insert(8,11);
-    root2.insert(2,12);
-    root2.insert(2,12);
-    root2.insert(2,1);
+  BTLeafNode leaf;
+
+  leaf.insert(7, (RecordId){10,9}) ;
+  leaf.insert(8, (RecordId){11,10} );
+  leaf.insert(2, (RecordId){12,13} );
+  leaf.insert(2, (RecordId){12,13} );
+  leaf.insert(2, (RecordId){1,2} );
+
+  cout << "Testing NON leaf node: " << endl;
+  BTNonLeafNode root2;
+  root2.initializeRoot(666,6,13);
+
+  root2.insert(7,10);
+  root2.insert(8,11);
+  root2.insert(2,12);
+  root2.insert(2,12);
+  root2.insert(2,1);
+
 
 /*
     //Let's test for median more accurately
