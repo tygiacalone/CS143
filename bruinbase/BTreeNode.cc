@@ -319,12 +319,15 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
  */
 PageId BTLeafNode::getNextNodePtr() //Chloe
 {
-    PageId pid;
+    //PageId pid;
+    
+    PageId* pid = (PageId *) (buffer + PageFile::PAGE_SIZE) - 1;
+    return *pid;
 
-    // Return the last sizeof(PageId) bytes
-    memcpy(&pid, (buffer + PageFile::PAGE_SIZE) - sizeof(PageId), sizeof(PageId));
-
-    return pid;
+//    // Return the last sizeof(PageId) bytes
+//    memcpy(&pid, (buffer + PageFile::PAGE_SIZE) - sizeof(PageId), sizeof(PageId));
+//
+//    return *pid;
 }
 
 
