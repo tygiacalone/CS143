@@ -121,7 +121,7 @@ int main()
     RecordId rid2;
     rid2.pid = -1;
     rid2.sid = -1;
-
+/*
     blah.readEntry(0, key2, rid2);
     cout << "Entry at specified eid has key=" << key2 << " and pid=" << rid2.pid << " and sid=" << rid2.sid << endl;
 
@@ -134,19 +134,24 @@ int main()
     blah.readEntry(3, key2, rid2);
     cout << "Entry at specified eid has key=" << key2 << " and pid=" << rid2.pid << " and sid=" << rid2.sid << endl;
     //This should stop after we fill up the entire blah buffer (produces maybe 4 errors or so)
+*/
     for(int j=0; j<1000; j++)
       blah.insert(101, (RecordId){1,1});
 
     int blah2Key = -1;
-    cout << blah.insertAndSplit(102, (RecordId){9000, 9001}, blah2, blah2Key) << endl;
+    cout << "next node ptr initial value: " << blah.getNextNodePtr() << endl;
+
+    int initial = blah.getNextNodePtr();
+
+    cout << blah.insertAndSplit(12, (RecordId){9000, 9001}, blah2, blah2Key) << endl;
 
     cout << "blah has numKeys " << blah.getKeyCount() << " and blah2 has numKeys " << blah2.getKeyCount() << endl;
     cout << "blah2's first entry is now key: " << blah2Key << endl;
 
-    cout << "next node: " << blah.getNextNodePtr() << endl;
-    cout << "first node :\n" << blah.readEntry(0, key2, rid2);
-    cout << "second node :\n" << blah2.readEntry(0, key2, rid2);
-    cout << "next node: " << blah.getNextNodePtr() << endl;
+    //cout << "first node entries:\n" << blah.readEntry(0, key2, rid2);
+    //cout << "second node entries:\n" << blah2.readEntry(0, key2, rid2);
+    cout << "nextNodePtr() initial value: " << initial << endl;
+    cout << "nextNodePtr() final value: " << blah.getNextNodePtr() << endl;
 /*
     int eid3 = -1;
     blah.locate(99, eid3);
@@ -211,13 +216,13 @@ int main()
     cout << "After insertAndSplit, root node has numKeys: " << root.getKeyCount() << endl;
     cout << "After insertAndSplit, sibling node has numKeys: " << sibling.getKeyCount() << endl;
     cout << "Median: " << median << endl;
-*/
+
 
   cout << endl<<  "Testing leaf node: " << endl;
 
   BTLeafNode leaf;
 
-  leaf.insert(7, (RecordId){10,9}) ;
+  leaf.insert(7, (RecordId){10,9} );
   leaf.insert(8, (RecordId){11,10} );
   leaf.insert(2, (RecordId){12,13} );
   leaf.insert(2, (RecordId){12,13} );
@@ -234,7 +239,7 @@ int main()
   root2.insert(2,1);
 
 
-/*
+
     //Let's test for median more accurately
 
     for(int k=0; k<127; k++)

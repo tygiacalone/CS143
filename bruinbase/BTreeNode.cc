@@ -93,7 +93,7 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
     *riid = rid;
 
     newEntry->rid = *riid;
-
+/*
     cout << "\nInserted: " << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
@@ -109,7 +109,7 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
 
         count1++;
     }
-
+*/
     return 0;
 }
 
@@ -137,6 +137,18 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
     // Not time to split yet
     if (getKeyCount() < maxNumKeys) {
         return RC_FILE_WRITE_FAILED;
+    }
+
+    cout << "\nBefore: " << endl;
+    int count1 = 0;
+    while (count1 < maxNumKeys) {
+        nEntry tmp;
+        memcpy(&tmp, buffer + count1 * sizeof(nEntry), sizeof(nEntry));
+
+        cout << "key: " << tmp.key << endl;
+        cout << "pid: " << tmp.rid.pid << endl;
+
+        count1++;
     }
 
     PageId nextPtr = getNextNodePtr();
@@ -189,6 +201,32 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
 
     // Set pointer to sibling's next node to the old next of this node
     memset((sibling.buffer + PageFile::PAGE_SIZE) - sizeof(PageId), nextPtr, sizeof(PageId));
+
+    // Testing
+    int count = 0;
+    cout << "\nAfter: " << endl;\
+    while (count < maxNumKeys) {
+        nEntry tmp;
+        memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
+
+        cout << "key: " << tmp.key << endl;
+        cout << "rid: " << tmp.rid.pid << endl;
+
+        count++;
+    }
+
+    count = 0;
+    cout << "\nSibling: " << endl;
+    while (count < maxNumKeys) {
+        nEntry tmp;
+        memcpy(&tmp, sibling.buffer + count * sizeof(nEntry), sizeof(nEntry));
+
+        cout << "key: " << tmp.key << endl;
+        cout << "rid: " << tmp.rid.pid << endl;
+
+        count++;
+    }
+
 
     return 0;
 }
