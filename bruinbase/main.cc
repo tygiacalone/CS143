@@ -229,7 +229,7 @@ int main()
   leaf.insert(2, (RecordId){1,2} );
 
   cout << "Testing NON NON NON leaf node: " << endl;
-  BTNonLeafNode root2;
+*/  BTNonLeafNode root2;
   root2.initializeRoot(666,7,13);
 
   root2.insert(7,10);
@@ -239,9 +239,8 @@ int main()
   root2.insert(2,1);
 
 
-
     //Let's test for median more accurately
-
+    int median;
     for(int k=0; k<127; k++)
       root2.insert(2*(k+2),2);
 
@@ -258,7 +257,7 @@ int main()
     cout << "Median: " << median << endl;
 
   cout << "--------------------2C TESTING------------------------" << endl;
-  //----------------------------------------------------------------------------------------------------
+/*  //----------------------------------------------------------------------------------------------------
   //int maxEid = (PageFile::PAGE_SIZE-sizeof(PageId))/(sizeof(RecordId)+sizeof(int)); //This produces 85
   cout << sizeof(PageFile) << endl;
   cout << sizeof(PageId) << endl;

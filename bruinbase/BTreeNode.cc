@@ -487,7 +487,7 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
     int count1 = 0;
     while (count1 < maxNumKeys) {
         nEntry tmp;
-        memcpy(&tmp,  sizeof(PageId)+buffer + count1 * sizeof(nEntry), sizeof(nEntry));
+        memcpy(&tmp, buffer + count1 * sizeof(nEntry), sizeof(nEntry));
 
         cout << "key: " << tmp.key << endl;
         cout << "pid: " << tmp.pid << endl;
@@ -503,7 +503,7 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
 
     int keyCount = getKeyCount();
     int half = maxNumKeys/2;
-    ;
+
     int offset = half * sizeof(nEntry);
     int max = maxNumKeys * sizeof(nEntry);
     int incr = sizeof(nEntry);
@@ -513,7 +513,7 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
     while(offset < max) {
 
         nEntry * siblingNode = new nEntry;
-        memcpy(siblingNode, sizeof(PageId)+buffer+offset, sizeof(nEntry));
+        memcpy(siblingNode, buffer+offset, sizeof(nEntry));
 
         //cout << "key: " << siblingNode->key << endl;
         if(firstLoop) {
@@ -541,7 +541,7 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
     cout << "\nAfter: " << endl;\
     while (count < maxNumKeys) {
         nEntry tmp;
-        memcpy(&tmp, sizeof(PageId)+ buffer + count * sizeof(nEntry), sizeof(nEntry));
+        memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
 
         cout << "key: " << tmp.key << endl;
         cout << "pid: " << tmp.pid << endl;
@@ -553,7 +553,7 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
     cout << "\nSibling: " << endl;
     while (count < maxNumKeys) {
         nEntry tmp;
-        memcpy(&tmp, sizeof(PageId)+sibling.buffer + count * sizeof(nEntry), sizeof(nEntry));
+        memcpy(&tmp, sibling.buffer + count * sizeof(nEntry), sizeof(nEntry));
 
         cout << "key: " << tmp.key << endl;
         cout << "pid: " << tmp.pid << endl;
