@@ -238,6 +238,9 @@ int main()
   root2.insert(2,12);
   root2.insert(2,1);
 
+    root2.insert(119, 2);
+    root2.insert(119, 2);
+
 
     //Let's test for median more accurately
     int median;

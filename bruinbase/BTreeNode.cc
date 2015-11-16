@@ -319,12 +319,12 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
  */
 PageId BTLeafNode::getNextNodePtr() //Chloe
 {
-    PageId pid;
+    PageId * pid = new PageId;
 
     // Return the last sizeof(PageId) bytes
-    memcpy(&pid, (buffer + PageFile::PAGE_SIZE) - sizeof(PageId), sizeof(PageId));
+    memcpy(pid, (buffer + PageFile::PAGE_SIZE) - sizeof(PageId), sizeof(PageId));
 
-    return pid;
+    return *pid;
 }
 
 
@@ -433,7 +433,7 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
 //    *piid = pid;
 //
 //    newEntry->pid = *piid;
-
+/*
     cout << "\nInserted: " << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
@@ -448,7 +448,7 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
 
         count1++;
     }
-
+*/
     return 0;
      
 
