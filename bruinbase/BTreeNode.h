@@ -21,7 +21,8 @@
  */
 class BTLeafNode {
   public:
-    
+    const bool isLeaf = true;
+
     BTLeafNode();
    /**
     * Insert the (key, rid) pair to the node.
@@ -121,7 +122,6 @@ class BTLeafNode {
             rid.pid = 0;
             rid.sid = 0;
         }
-
         
     };
 
@@ -133,7 +133,9 @@ class BTLeafNode {
  */
 class BTNonLeafNode {
   public:
-    
+
+    const bool isLeaf = false;
+
     BTNonLeafNode();
 
    /**

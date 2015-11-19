@@ -74,13 +74,13 @@ class BTreeIndex {
    * @param cursor[OUT] the cursor pointing to the index entry with 
    *                    searchKey or immediately behind the largest key 
    *                    smaller than searchKey.
-   * @return 0 if searchKey is found. Othewise, an error code
+   * @return 0 if searchKey is found. Otherwise, an error code
    */
   RC locate(int searchKey, IndexCursor& cursor);
 
   /**
    * Read the (key, rid) pair at the location specified by the index cursor,
-   * and move foward the cursor to the next entry.
+   * and move forward the cursor to the next entry.
    * @param cursor[IN/OUT] the cursor pointing to an leaf-node index entry in the b+tree
    * @param key[OUT] the key stored at the index cursor location
    * @param rid[OUT] the RecordId stored at the index cursor location
