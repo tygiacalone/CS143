@@ -261,7 +261,7 @@ int main()
 
   cout << "--------------------2C TESTING------------------------" << endl;
   //----------------------------------------------------------------------------------------------------
-*/
+
   //int maxEid = (PageFile::PAGE_SIZE-sizeof(PageId))/(sizeof(RecordId)+sizeof(int)); //This produces 85
   cout << sizeof(PageFile) << endl;
   cout << sizeof(PageId) << endl;
@@ -270,7 +270,7 @@ int main()
   pf.open("test", 'w');
   cout << "pf.endPid() on initialization: " << pf.endPid() << endl;
   //check for endPid changes
-/*
+
     BTLeafNode thisLeaf;
   for(int i=0; i<85; i++)
       thisLeaf.insert(1, (RecordId) {1,1});
@@ -283,6 +283,7 @@ int main()
   cout << "thisLeaf write: " << thisLeaf.write(1, pf) << endl;
   cout << "pf.endPid() after thisLeaf write: " << pf.endPid() << endl;
   //Try inserting leaf node via splitting
+
   BTLeafNode anotherLeaf;
   int anotherKey;
   thisLeaf.insertAndSplit(2, (RecordId) {2,2}, anotherLeaf, anotherKey);
@@ -458,11 +459,19 @@ int main()
   */
 
 
-  /*
+
   IndexCursor c;
   //test BTreeIndex
   BTreeIndex test;
-  test.open("testIndex.idx", 'w');
+
+    cout << "Test root ID before open: " << test.getRootPid() << endl;
+    cout << "Test tree height before open: " << test.getTreeHeight() << endl;
+
+  test.open("testPFRW.idx", 'w');
+
+    cout << "Test root ID after open: " << test.getRootPid() << endl;
+    cout << "Test tree height after open: " << test.getTreeHeight() << endl;
+    /*
   for (int i=0; i<200; i++)
       test.insert(i, (RecordId) {i, i});
 
