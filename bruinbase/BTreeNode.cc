@@ -7,6 +7,7 @@ BTLeafNode::BTLeafNode()
 : maxNumKeys((PageFile::PAGE_SIZE - sizeof(PageId)) / (sizeof(nEntry)))
 {
     memset(buffer, 0, PageFile::PAGE_SIZE);
+    isLeaf = true;
 }
 
 /*
@@ -344,6 +345,7 @@ BTNonLeafNode::BTNonLeafNode()
 : maxNumKeys((PageFile::PAGE_SIZE - sizeof(PageId)) / (sizeof(nEntry)))
 {
     memset(buffer, 0, PageFile::PAGE_SIZE);
+    isLeaf = false;
 }
 
 /*
@@ -358,7 +360,8 @@ RC BTNonLeafNode::read(PageId pid, const PageFile& pf) //Ty
         return RC_FILE_READ_FAILED;
     return 0;
 }
-    
+
+
 /*
  * Write the content of the node to the page pid in the PageFile pf.
  * @param pid[IN] the PageId to write to

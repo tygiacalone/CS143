@@ -18,6 +18,8 @@ using namespace std;
 BTreeIndex::BTreeIndex()
 {
     rootPid = -1;
+    treeHeight = 0;
+    
 }
 
 /*
@@ -30,6 +32,31 @@ BTreeIndex::BTreeIndex()
 
 RC BTreeIndex::open(const string& indexname, char mode) //Ty
 {
+    RC ret;
+    if(ret = pf.open(indexname, mode) != 0)
+        return ret;
+    
+    char storedData[PageFile::PAGE_SIZE];
+    
+    //If the file is empty:
+    if(pf.endPid() == 0)
+    {
+        rootPid = -1;
+        treeHeight = 0;
+        
+        if((ret = pf.write(storedData)) != 0)
+            return ret;
+    }
+    //If file is not empty:
+    else
+    {
+        if((rc = pf.read(0, storedData) != 0))
+            return ret;
+        
+        //Read in previously stored data of treeHeight and rootPid
+        rootPid = *((PageId *) storedData);
+        treeHeight = *((int *) (storedData + sizeof(PageId)));
+    }
     return 0;
 }
 
@@ -40,7 +67,15 @@ RC BTreeIndex::open(const string& indexname, char mode) //Ty
 
 RC BTreeIndex::close() //Chloe
 {
-    return 0;
+    //Store extra variables to disk
+    char storedData[PageFile::PAGE_SIZE];
+    *((PageId *) storedData) = rootPid;
+    *((int *) (storedData + sizeof(PageId))) = treeHeight;
+    
+    if(!pf.write(0, dataToStore))
+        return RC_FILE_WRITE_FAILED;
+    
+    return pf.close();
 }
 
 /*

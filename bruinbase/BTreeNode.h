@@ -21,7 +21,7 @@
  */
 class BTLeafNode {
   public:
-    const bool isLeaf = true;
+    bool isLeaf;
 
     BTLeafNode();
    /**
@@ -104,6 +104,7 @@ class BTLeafNode {
     */
     RC write(PageId pid, PageFile& pf);
 
+
   private:
    /**
     * The main memory buffer for loading the content of the disk page 
@@ -134,7 +135,7 @@ class BTLeafNode {
 class BTNonLeafNode {
   public:
 
-    const bool isLeaf = false;
+    bool isLeaf;
 
     BTNonLeafNode();
 
@@ -201,6 +202,7 @@ class BTNonLeafNode {
     * @return 0 if successful. Return an error code if there is an error.
     */
     RC write(PageId pid, PageFile& pf);
+
 
   private:
    /**
