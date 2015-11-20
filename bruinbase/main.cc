@@ -134,7 +134,7 @@ int main()
     blah.readEntry(3, key2, rid2);
     cout << "Entry at specified eid has key=" << key2 << " and pid=" << rid2.pid << " and sid=" << rid2.sid << endl;
     //This should stop after we fill up the entire blah buffer (produces maybe 4 errors or so)
-*/
+
     for(int j=0; j<1000; j++)
       blah.insert(101, (RecordId){1,1});
 
@@ -152,7 +152,7 @@ int main()
     //cout << "second node entries:\n" << blah2.readEntry(0, key2, rid2);
     cout << "nextNodePtr() initial value: " << initial << endl;
     cout << "nextNodePtr() final value: " << blah.getNextNodePtr() << endl;
-/*
+
     int eid3 = -1;
     blah.locate(99, eid3);
 
@@ -261,6 +261,7 @@ int main()
 
   cout << "--------------------2C TESTING------------------------" << endl;
   //----------------------------------------------------------------------------------------------------
+*/
   //int maxEid = (PageFile::PAGE_SIZE-sizeof(PageId))/(sizeof(RecordId)+sizeof(int)); //This produces 85
   cout << sizeof(PageFile) << endl;
   cout << sizeof(PageId) << endl;
@@ -269,7 +270,8 @@ int main()
   pf.open("test", 'w');
   cout << "pf.endPid() on initialization: " << pf.endPid() << endl;
   //check for endPid changes
-  BTLeafNode thisLeaf;
+/*
+    BTLeafNode thisLeaf;
   for(int i=0; i<85; i++)
       thisLeaf.insert(1, (RecordId) {1,1});
   cout << "thisLeaf has key count: " << thisLeaf.getKeyCount() << endl;
