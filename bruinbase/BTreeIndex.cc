@@ -33,9 +33,10 @@ BTreeIndex::BTreeIndex()
 RC BTreeIndex::open(const string& indexname, char mode) //Ty
 {
     RC ret = pf.open(indexname, mode);
-    if(ret != 0)
+    if(ret != 0) {
         return ret;
-    
+    }
+
     char storedData[PageFile::PAGE_SIZE];
     
     //If the file is empty:
@@ -45,16 +46,17 @@ RC BTreeIndex::open(const string& indexname, char mode) //Ty
         treeHeight = 0;
 
         ret = pf.write(storedData); // write needs two params. Function definition: RC PageFile::write(PageId pid, const void* buffer)
-        if(ret != 0)
+        if(ret != 0) {
             return ret;
+        }
     }
     //If file is not empty:
     else
     {
         ret = pf.read(0, storedData;
-        if(ret != 0)
+        if(ret != 0) {
             return ret;
-        
+        }
         //Read in previously stored data of treeHeight and rootPid
         rootPid = *((PageId *) storedData);
         treeHeight = *((int *) (storedData + sizeof(PageId)));
@@ -74,8 +76,9 @@ RC BTreeIndex::close() //Chloe
     *((PageId *) storedData) = rootPid; // rootPid cannot be accessed from here. (private variable)
     *((int *) (storedData + sizeof(PageId))) = treeHeight; // treeHeight cannot be accessed from here. (private variable)
     
-    if(!pf.write(0, dataToStore)) // dataToStore not declared
+    if(!pf.write(0, dataToStore)) { // dataToStore not declared
         return RC_FILE_WRITE_FAILED;
+    }
     
     return pf.close();
 }
