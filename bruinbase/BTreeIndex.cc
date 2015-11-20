@@ -45,7 +45,6 @@ RC BTreeIndex::open(const string& indexname, char mode) //Ty
         treeHeight = 0;
 
         ret = pf.write(storedData); // write needs two params. Function definition: RC PageFile::write(PageId pid, const void* buffer)
-        {
         if(ret != 0)
             return ret;
     }
