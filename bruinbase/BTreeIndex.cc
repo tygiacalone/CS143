@@ -33,7 +33,7 @@ BTreeIndex::BTreeIndex()
 RC BTreeIndex::open(const string& indexname, char mode) //Ty
 {
     RC ret;
-    if(ret = pf.open(indexname, mode) != 0)
+    if((ret = pf.open(indexname, mode)) != 0)
         return ret;
     
     char storedData[PageFile::PAGE_SIZE];
@@ -50,7 +50,7 @@ RC BTreeIndex::open(const string& indexname, char mode) //Ty
     //If file is not empty:
     else
     {
-        if((rc = pf.read(0, storedData) != 0))
+        if((ret = pf.read(0, storedData) != 0))
             return ret;
         
         //Read in previously stored data of treeHeight and rootPid
