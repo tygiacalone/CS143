@@ -147,7 +147,6 @@ int main()
 
     cout << "blah has numKeys " << blah.getKeyCount() << " and blah2 has numKeys " << blah2.getKeyCount() << endl;
     cout << "blah2's first entry is now key: " << blah2Key << endl;
-    cout << "blah2's first entry is now key: " << blah2Key << endl;
 
     //cout << "first node entries:\n" << blah.readEntry(0, key2, rid2);
     //cout << "second node entries:\n" << blah2.readEntry(0, key2, rid2);

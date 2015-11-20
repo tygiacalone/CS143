@@ -27,7 +27,11 @@ BTreeIndex::BTreeIndex()
  * @param mode[IN] 'r' for read, 'w' for write
  * @return error code. 0 if no error
  */
+<<<<<<< HEAD
 RC BTreeIndex::open(const string& indexname, char mode) //Ty
+=======
+RC BTreeIndex::open(const string& indexname, char mode) // Chloe
+>>>>>>> 5a341055e74c714ff65426d8b1882a8b58bcf050
 {
     return 0;
 }
@@ -36,7 +40,11 @@ RC BTreeIndex::open(const string& indexname, char mode) //Ty
  * Close the index file.
  * @return error code. 0 if no error
  */
+<<<<<<< HEAD
 RC BTreeIndex::close() //Chloe
+=======
+RC BTreeIndex::close() // Ty
+>>>>>>> 5a341055e74c714ff65426d8b1882a8b58bcf050
 {
     return 0;
 }
@@ -47,7 +55,11 @@ RC BTreeIndex::close() //Chloe
  * @param rid[IN] the RecordId for the record being inserted into the index
  * @return error code. 0 if no error
  */
+<<<<<<< HEAD
 RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
+=======
+RC BTreeIndex::insert(int key, const RecordId& rid) // Ty
+>>>>>>> 5a341055e74c714ff65426d8b1882a8b58bcf050
 {
     return 0;
 }
@@ -70,7 +82,11 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
  *                    smaller than searchKey.
  * @return 0 if searchKey is found. Othewise an error code
  */
+<<<<<<< HEAD
 RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
+=======
+RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) // Chloe
+>>>>>>> 5a341055e74c714ff65426d8b1882a8b58bcf050
 {
     return 0;
 }
@@ -83,7 +99,11 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
  * @param rid[OUT] the RecordId stored at the index cursor location.
  * @return error code. 0 if no error
  */
+<<<<<<< HEAD
 RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid) //Ty
+=======
+RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid) // Ty
+>>>>>>> 5a341055e74c714ff65426d8b1882a8b58bcf050
 {
     return 0;
 }

@@ -168,6 +168,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
     int incr = sizeof(nEntry);
     bool firstLoop = true;
     PageId firstSiblingPid;
+    nEntry * first;
 
     // Copy right half of node to sibling
     while(offset < max) {
@@ -179,6 +180,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
 
         if(firstLoop) {
             siblingKey = siblingNode->key;
+            first = siblingNode;
             firstSiblingPid = siblingNode->rid.pid;
             firstLoop = false;
         }
@@ -197,10 +199,10 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
         sibling.insert(key, rid);
 
     // Set pointer to sibling's first pid
-    memset((buffer + PageFile::PAGE_SIZE) - sizeof(PageId), firstSiblingPid, sizeof(PageId));
+    memcpy((buffer + PageFile::PAGE_SIZE) - sizeof(PageId), &firstSiblingPid, sizeof(PageId));
 
     // Set pointer to sibling's next node to the old next of this node
-    memset((sibling.buffer + PageFile::PAGE_SIZE) - sizeof(PageId), nextPtr, sizeof(PageId));
+    memcpy((sibling.buffer + PageFile::PAGE_SIZE) - sizeof(PageId), &nextPtr, sizeof(PageId));
 
     // Testing
     int count = 0;
@@ -227,7 +229,7 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
         count++;
     }
 
-    cout << "The nextNodePtr() value should be: " << firstSiblingPid << endl;
+    cout << "The nextNodePtr() final value should be: " << firstSiblingPid << endl;
     return 0;
 }
 
@@ -319,24 +321,10 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
  */
 PageId BTLeafNode::getNextNodePtr() //Chloe
 {
-<<<<<<< HEAD
-    //PageId pid;
-    
-    PageId* pid = (PageId *) (buffer + PageFile::PAGE_SIZE) - 1;
-    return *pid;
-
-//    // Return the last sizeof(PageId) bytes
-//    memcpy(&pid, (buffer + PageFile::PAGE_SIZE) - sizeof(PageId), sizeof(PageId));
-//
-//    return *pid;
-=======
-    PageId * pid = new PageId;
-
-    // Return the last sizeof(PageId) bytes
-    memcpy(pid, (buffer + PageFile::PAGE_SIZE) - sizeof(PageId), sizeof(PageId));
-
-    return *pid;
->>>>>>> 0c9065e57d478c77d5094eaddbb42a998cf27722
+    //return this->sibling;
+    PageId pid = 0;
+    memcpy(&pid, buffer + PageFile::PAGE_SIZE - sizeof(PageId), sizeof(PageId));// (PageId *) (buffer + PageFile::PAGE_SIZE) - 1;
+    return pid;
 }
 
 
