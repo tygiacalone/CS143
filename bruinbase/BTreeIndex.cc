@@ -47,7 +47,7 @@ RC BTreeIndex::open(const string& indexname, char mode) //Ty
         rootPid = -1;
         treeHeight = 0;
 
-        ret = pf.write(0, storedData); // write needs two params. Function definition: RC PageFile::write(PageId pid, const void* buffer)
+        ret = pf.write(0, storedData);
         if(ret != 0) {
             return ret;
         }
@@ -79,7 +79,7 @@ RC BTreeIndex::close() //Chloe
     *((PageId *) storedData) = rootPid; // rootPid cannot be accessed from here. (private variable)
     *((int *) (storedData + sizeof(PageId))) = treeHeight; // treeHeight cannot be accessed from here. (private variable)
     
-    if(!pf.write(0, storedData)) { // dataToStore not declared
+    if(!pf.write(0, storedData)) {
         return RC_FILE_WRITE_FAILED;
     }
     
@@ -120,6 +120,32 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
 RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
 
 {
+    PageId pid = rootPid;
+    int eid = -1;
+    
+    BTLeafNode leaf = BTLeafNode();
+    BTNonLeafNode nonleaf = BTNonLeafNode();
+    
+    if(treeHeight > 1)
+    {
+        for(int i=0; i<treeHeight - 1; i++)
+        {
+            if(nonleaf.read(pid, pf) < 0)
+                return RC_NO_SUCH_RECORD;
+            
+            if(nonleaf.locateChildPtr(searchKey, pid) < 0)
+                return -1; //not sure which error message to send here!
+        }
+    }
+    
+    if(leaf.read(pid,pf)<0)
+        return RC_NO_SUCH_RECORD;
+    
+    else
+    {
+        cursor.pid = pid;
+        cursor.eid = eid;
+    }
     return 0;
 }
 
