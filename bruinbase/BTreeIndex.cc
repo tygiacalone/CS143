@@ -94,6 +94,7 @@ RC BTreeIndex::close() //Chloe
 
 RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
 {
+
     return 0;
 }
 
@@ -138,19 +139,21 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     }
     
     if(leaf.read(pid,pf)<0)
+    {
         return RC_NO_SUCH_RECORD;
-    
+    }
     else
     {
         cursor.pid = pid;
         cursor.eid = eid;
     }
+
     return 0;
 }
 
 /*
  * Read the (key, rid) pair at the location specified by the index cursor,
- * and move foward the cursor to the next entry.
+ * and move forward the cursor to the next entry.
  * @param cursor[IN/OUT] the cursor pointing to an leaf-node index entry in the b+tree
  * @param key[OUT] the key stored at the index cursor location.
  * @param rid[OUT] the RecordId stored at the index cursor location.
@@ -158,7 +161,35 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
  */
 
 RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid) //Ty
-
 {
+    BTLeafNode node;
+    RC read_err;
+    RC readEntry_err;
+    PageId pid = cursor.pid;
+    int eid = cursor.eid;
+
+    read_err = node.read(pid, pf);
+    if (read_err) { // If we can't read in the specified node
+        return read_err;
+    }
+
+    readEntry_err = node.readEntry(eid, key, rid);
+    if (!readEntry_err) { // If we find next entry exists in the current node
+        eid++;
+
+        if (eid >= node.getKeyCount()) { // If we moved eid past the end
+            eid = 0;
+            pid = node.getNextNodePtr();
+        }
+    }
+    else {
+        // Set eid, pid to beginning of next node
+        eid = 0;
+        pid = node.getNextNodePtr();
+    }
+
+    cursor.eid = eid;
+    cursor.pid = pid;
+
     return 0;
 }
