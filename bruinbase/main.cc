@@ -486,7 +486,7 @@ int main()
     cout << "did it work: " << test.locate(90, c) << endl;
     cout << "90: " << c.eid << " / " << c.pid << endl;
     cout << "did it work: " << test.locate(300, c) << endl;
-    cout << "3000: " << c.eid << " / " << c.pid << endl;
+    cout << "300: " << c.eid << " / " << c.pid << endl;
   cout << "did it work: " << test.locate(500, c) << endl;
       cout << "500: " << c.eid << " / " << c.pid << endl;
 
