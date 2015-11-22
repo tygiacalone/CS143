@@ -473,7 +473,7 @@ int main()
     cout << "Test tree height after open: " << test.getTreeHeight() << endl;
 
 
-  for (int i=0; i<70; i++)
+  for (int i=0; i<200; i++)
       test.insert(i, (RecordId) {i, i});
 
     cout << "tree height: " << test.getTreeHeight() << endl;
@@ -482,7 +482,9 @@ int main()
   cout << "did it work: " << test.locate(1, c) << endl;
       cout << "1: " << c.eid << " / " << c.pid << endl;
   cout << "did it work: " << test.locate(20, c) << endl;
-      cout << "9: " << c.eid << " / " << c.pid << endl;
+      cout << "20: " << c.eid << " / " << c.pid << endl;
+    cout << "did it work: " << test.locate(90, c) << endl;
+    cout << "20: " << c.eid << " / " << c.pid << endl;
   cout << "did it work: " << test.locate(500, c) << endl;
       cout << "500: " << c.eid << " / " << c.pid << endl;
 
