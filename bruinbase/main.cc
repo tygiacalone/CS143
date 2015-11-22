@@ -467,13 +467,16 @@ int main()
     cout << "Test root ID before open: " << test.getRootPid() << endl;
     cout << "Test tree height before open: " << test.getTreeHeight() << endl;
 
-  test.open("testPFRW.idx", 'w');
+    test.open("testindex.idx", 'w');
 
     cout << "Test root ID after open: " << test.getRootPid() << endl;
     cout << "Test tree height after open: " << test.getTreeHeight() << endl;
-    /*
-  for (int i=0; i<200; i++)
+
+
+  for (int i=0; i<100; i++)
       test.insert(i, (RecordId) {i, i});
+
+    cout << "tree height: " << test.getTreeHeight() << endl;
 
   cout << "" << endl;
   cout << "did it work: " << test.locate(1, c) << endl;
@@ -482,7 +485,7 @@ int main()
       cout << "9: " << c.eid << " / " << c.pid << endl;
   cout << "did it work: " << test.locate(500, c) << endl;
       cout << "500: " << c.eid << " / " << c.pid << endl;
-
+/*
   //print out totals for testing purposes
   cout << "rootPid: " << test.getRootPid() << endl;
   cout << "treeHeight: " << test.getTreeHeight() << endl;

@@ -9,8 +9,24 @@
  
 #include "BTreeIndex.h"
 #include "BTreeNode.h"
+#include "RecordFile.h"
+#include <iostream>
 
 using namespace std;
+
+
+struct nEntry
+{
+    int key;
+    RecordId rid;
+
+    nEntry()
+    {
+        rid.pid = 0;
+        rid.sid = 0;
+    }
+
+};
 
 /*
  * BTreeIndex constructor
@@ -85,6 +101,106 @@ RC BTreeIndex::close() //Chloe
     return pf.close();
 }
 
+
+RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int height, int& parentKey, PageId& parentPid) //Ty
+{
+
+    if (treeHeight == height) {// If we're at the leaf level
+        BTLeafNode node;
+        RC insert_err = 0;
+        RC write_err = 0;
+
+        node.read(currPid, pf);
+        insert_err = node.insert(key, rid);
+
+        if (insert_err) { // If node is full
+            BTLeafNode sibling;
+            write_err = 0;
+            write_err = node.insertAndSplit(key, rid, sibling, parentKey);
+
+            if (!write_err) {
+                sibling.setNextNodePtr(node.getNextNodePtr());
+                parentPid = pf.endPid();
+                node.setNextNodePtr(parentPid);
+
+                write_err = sibling.write(parentPid, pf);
+
+                if (write_err) {
+                    return write_err;
+                }
+            }
+            else {
+                return write_err;
+            }
+        }
+        write_err = 0;
+        write_err = node.write(currPid, pf);
+
+        if (write_err) {
+            return write_err;
+        }
+    }
+    else { // Not at leaf yet
+        BTNonLeafNode node;
+        PageId next;
+
+        node.read(currPid, pf);
+
+        int eid = 0;
+        int maxEntries = node.getKeyCount();
+
+        while (eid < maxEntries) { // Find correct eid that corresponds to nEntry with key <= key we want to insert
+            nEntry tmp;
+            memcpy(&tmp, node.getBuffer() + eid * sizeof(nEntry), sizeof(nEntry));
+
+            if (tmp.key > key)
+                break;
+
+            eid++;
+        }
+
+        node.readEntry(eid, next); // Read in next node to try to insert into
+
+
+        insertAtLevel(key, rid, next, height + 1, parentKey, parentPid);
+
+        if (parentKey > 0) { // If we split at child's level, insert into parent
+            RC insert_err = 0;
+            insert_err = node.insert(parentKey, parentPid);
+
+            if (insert_err) { // If we couldn't insert into the parent
+                BTNonLeafNode sibling;
+                int newParentKey = -1;
+                insert_err = 0;
+                insert_err = node.insertAndSplit(parentKey, parentPid, sibling, newParentKey);
+
+                if (!insert_err) {
+                    parentKey = newParentKey;
+                    parentPid = pf.endPid();
+                    RC write_err = 0;
+                    write_err = sibling.write(parentPid, pf);
+
+                    if (write_err) {
+                        return write_err;
+                    }
+                }
+                else {
+                    return insert_err;
+                }
+
+            }
+            else { // If we inserted into parent without issue, we no longer need to insert parentKey value so reset it
+                parentKey = -1;
+            }
+        }
+
+        node.write(currPid, pf); // Write changes
+    }
+
+    return 0;
+}
+
+
 /*
  * Insert (key, RecordId) pair to the index.
  * @param key[IN] the key for the value inserted into the index
@@ -94,6 +210,59 @@ RC BTreeIndex::close() //Chloe
 
 RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
 {
+
+    if (treeHeight == 0) { // If just created tree
+        BTLeafNode root;
+        RC insert_err = 0;
+        RC write_err = 0;
+        insert_err = root.insert(key, rid);
+
+        if (insert_err) {
+            return -2;
+        }
+        else {
+            rootPid = pf.endPid();
+            treeHeight++;
+            write_err = root.write(rootPid, pf);
+
+            if (write_err) {
+                //cout << "write err" << endl;
+                return -3;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
+    else {
+
+        int insKey = -1;
+        PageId insPid;
+        RC insert_err = 0;
+        insert_err = insertAtLevel(key, rid, rootPid, 1, insKey, insPid);
+
+        if (!insert_err) {
+            return 1;
+        }
+
+        if (insKey > 0) {
+            BTNonLeafNode node;
+            RC init_err = 0;
+            init_err = node.initializeRoot(rootPid, insKey, insPid);
+
+            if (init_err) {
+                return RC_FILE_WRITE_FAILED;
+            }
+            else {
+                treeHeight++;
+                cout << "Tree height is: " << treeHeight << endl;
+                rootPid = pf.endPid();
+                node.write(rootPid, pf);
+            }
+
+        }
+
+    }
 
     return 0;
 }
@@ -135,6 +304,8 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
             
             if(nonleaf.locateChildPtr(searchKey, pid) < 0)
                 return -1; //not sure which error message to send here!
+
+
         }
     }
     

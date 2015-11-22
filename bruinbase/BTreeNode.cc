@@ -18,7 +18,7 @@ BTLeafNode::BTLeafNode()
  */
 RC BTLeafNode::read(PageId pid, const PageFile& pf)
 {
-    if(!pf.read(pid, buffer))
+    if(pf.read(pid, buffer))
         return RC_FILE_READ_FAILED;
     return 0;
 }
@@ -31,7 +31,8 @@ RC BTLeafNode::read(PageId pid, const PageFile& pf)
  */
 RC BTLeafNode::write(PageId pid, PageFile& pf)
 {
-    if(!pf.write(pid, buffer))
+    //cout << "writing to pid: " << pid << endl;
+    if(pf.write(pid, buffer))
         return RC_FILE_WRITE_FAILED;
     return 0;
 }
@@ -94,7 +95,8 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
     *riid = rid;
 
     newEntry->rid = *riid;
-/*
+
+    /*
     cout << "\nInserted: " << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
@@ -303,13 +305,49 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
     RecordId * read_rid = new RecordId;
     read_rid = &read.rid;
 
-    //NOTE: NOT SURE ABOUT MEM ALLOCATION FOR RID HERE?!
-    RecordId * riid = new RecordId;
-    riid = &read.rid;
-
     key = read.key;
     rid.pid = read_rid->pid;
     rid.sid = read_rid->sid;
+
+    //cout << "read: " << read.key << " saved: " << key << endl;
+
+    return 0;
+}
+
+
+RC BTNonLeafNode::readEntry(int eid, PageId& pid) //Ty
+{
+    // If you can't find the file to read, return err
+    int maxEntries = getKeyCount();
+    int offset = sizeof(nEntry) * eid;
+    nEntry read;
+
+    /*
+    cout << "maxEntries: " << maxEntries << endl;
+    cout << "eid: " << eid << endl;
+    cout << "offset: " << offset << endl;
+    */
+
+    // Print out all the key, rid pairs for testing
+    int count = 0;
+    while (count < maxEntries) {
+        nEntry tmp;
+        memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
+
+        cout << "key: " << tmp.key << endl;
+        cout << "rid: sid: " << tmp.pid << " pid: " << tmp.pid << endl;
+
+        count++;
+    }
+
+    if (eid > maxEntries || eid < 0) return RC_INVALID_CURSOR;
+
+    memcpy(&read, buffer + offset, sizeof(nEntry));
+
+    PageId * read_rid = new PageId;
+    read_rid = &read.pid;
+
+    pid = *read_rid;
 
     //cout << "read: " << read.key << " saved: " << key << endl;
 

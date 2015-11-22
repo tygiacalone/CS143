@@ -104,6 +104,8 @@ class BTLeafNode {
     */
     RC write(PageId pid, PageFile& pf);
 
+    char * getBuffer() { return this->buffer; };
+
 
   private:
    /**
@@ -112,7 +114,8 @@ class BTLeafNode {
     */
     char buffer[PageFile::PAGE_SIZE];
     int maxNumKeys;
-    
+
+
     struct nEntry
     {
         int key;
@@ -123,10 +126,11 @@ class BTLeafNode {
             rid.pid = 0;
             rid.sid = 0;
         }
-        
+
     };
 
-}; 
+};
+
 
 
 /**
@@ -202,6 +206,10 @@ class BTNonLeafNode {
     * @return 0 if successful. Return an error code if there is an error.
     */
     RC write(PageId pid, PageFile& pf);
+
+    RC readEntry(int eid, PageId& pid);
+
+    char * getBuffer() { return this->buffer; };
 
 
   private:

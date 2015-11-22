@@ -88,7 +88,10 @@ class BTreeIndex {
    */
   RC readForward(IndexCursor& cursor, int& key, RecordId& rid);
 
-  int getTreeHeight() const {
+  RC insertAtLevel(int key, const RecordId& rid, PageId pid, int height, int& insKey, PageId& insPid);
+
+
+    int getTreeHeight() const {
       return treeHeight;
   }
 
