@@ -18,9 +18,11 @@ BTLeafNode::BTLeafNode()
  */
 RC BTLeafNode::read(PageId pid, const PageFile& pf)
 {
-    if(pf.read(pid, buffer))
-        return RC_FILE_READ_FAILED;
-    return 0;
+//    if(pf.read(pid, buffer))
+//        return RC_FILE_READ_FAILED;
+//    return 0;
+    cout << "pid in read is: " << pid<< endl;
+    return pf.read(pid, buffer);
 }
     
 /*
@@ -627,8 +629,10 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid) //Chloe
     
     if(pid < 0)
         return RC_NO_SUCH_RECORD;
-    
+
     return 0;
+    
+
 }
 
 /*
