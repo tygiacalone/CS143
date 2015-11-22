@@ -299,23 +299,37 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     
     if(treeHeight > 0)
     {
-        for(int i=treeHeight; i > 0; i--)
+        for(int i = treeHeight; i > 0; i--)
         {
+            cout << "Current pid: " << pid << endl;
             RC ret;
             ret = nonleaf.read(pid, pf);
+
             if(ret < 0)
                 return ret;//RC_NO_SUCH_RECORD;
-            cout << "Looking for pid: " << pid << endl;
 
-            if(nonleaf.locateChildPtr(searchKey, pid) < 0)
-                return -1; //not sure which error message to send here!
+            eid = 0;
+            int maxEntries = leaf.getKeyCount();
 
+            while (eid < maxEntries) { // Find correct eid that corresponds to nEntry with key <= key we want to insert
+                nEntry tmp;
+                memcpy(&tmp, leaf.getBuffer() + eid * sizeof(nEntry), sizeof(nEntry));
+
+                if (tmp.key > searchKey)
+                    break;
+
+                eid++;
+            }
+
+            nonleaf.readEntry(eid, pid);
         }
     }
-    
-    if(leaf.read(pid,pf)<0)
+
+    cout << "Pid about to read: " << pid << endl;
+    RC leaf_ret = leaf.read(pid, pf);
+    if(leaf_ret)
     {
-        return  -3333;//RC_NO_SUCH_RECORD;
+        return leaf_ret;//RC_NO_SUCH_RECORD;
     }
     else
     {

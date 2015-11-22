@@ -21,7 +21,7 @@ RC BTLeafNode::read(PageId pid, const PageFile& pf)
 //    if(pf.read(pid, buffer))
 //        return RC_FILE_READ_FAILED;
 //    return 0;
-    cout << "pid in read is: " << pid<< endl;
+    //cout << "pid in read is: " << pid<< endl;
     return pf.read(pid, buffer);
 }
     
@@ -397,7 +397,11 @@ BTNonLeafNode::BTNonLeafNode()
  */
 RC BTNonLeafNode::read(PageId pid, const PageFile& pf) //Ty
 {
+<<<<<<< HEAD
     cout << "pid: " << endl;
+=======
+    //cout << "pid: " << pid << endl;
+>>>>>>> 3c2a38743e55c2c36370a1a3f168a897d0aaf1ef
     if(pf.read(pid, buffer))
         return RC_FILE_READ_FAILED;
     return 0;
@@ -414,7 +418,7 @@ RC BTNonLeafNode::read(PageId pid, const PageFile& pf) //Ty
  */
 RC BTNonLeafNode::write(PageId pid, PageFile& pf) //Chloe
 {
-    if(!pf.write(pid, buffer))
+    if(pf.write(pid, buffer))
         return RC_FILE_WRITE_FAILED;
     return 0;
 }
@@ -619,16 +623,17 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid) //Chloe
 {
     pid = getKeyCount() - 1;
     nEntry* ne = (nEntry*)buffer + pid;
+    cout << "pid is currently: " << pid << endl;
 
     for(; pid >= 0; pid--)
     {
-        cout << "Looking for pid: " << pid << endl;
+        cout << "pid is currently: " << pid << endl;
         if(ne->key <= searchKey)
             break;
         else
             ne--;
     }
-    
+
     if(pid < 0)
         return RC_NO_SUCH_RECORD;
 
