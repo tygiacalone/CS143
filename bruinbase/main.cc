@@ -490,6 +490,10 @@ int main()
   cout << "rootPid: " << test.getRootPid() << endl;
   cout << "treeHeight: " << test.getTreeHeight() << endl;
 
+
+    test.print_tree();
+    test.print_nodes();
+
   //test.insert(2342, (RecordId) {1,0});
 
   test.close();
@@ -498,15 +502,18 @@ int main()
   BTreeIndex test2;
   test2.open("testIndex2.idx", 'w');
   cout << "test2 treeHeight: " << test2.getTreeHeight() << endl;
-  test2.insert(272, (RecordId) {0,0});
+  test2.insert(272, (RecordId) {1,1});
   cout << "test2 treeHeight: " << test2.getTreeHeight() << endl;
   cout << "did it work: " << test2.locate(272, c) << endl;
       cout << "272: " << c.eid << " / " << c.pid << endl;
-  test2.insert(2342, (RecordId) {0,1});
+  test2.insert(2342, (RecordId) {2,2});
   cout << "did it work: " << test2.locate(2342, c) << endl;
       cout << "2342: " << c.eid << " / " << c.pid << endl;
 
   cout << "test2 treeHeight: " << test2.getTreeHeight() << endl;
+
+    test2.print_tree();
+    test2.print_nodes();
   test2.close();
 
 

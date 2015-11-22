@@ -96,7 +96,6 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
 
     newEntry->rid = *riid;
 
-    /*
     cout << "\nInserted: " << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
@@ -112,7 +111,7 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
 
         count1++;
     }
-*/
+
     return 0;
 }
 
@@ -396,6 +395,7 @@ BTNonLeafNode::BTNonLeafNode()
  */
 RC BTNonLeafNode::read(PageId pid, const PageFile& pf) //Ty
 {
+    cout << "pid: " << endl;
     if(!pf.read(pid, buffer))
         return RC_FILE_READ_FAILED;
     return 0;
@@ -476,7 +476,7 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
 //    *piid = pid;
 //
 //    newEntry->pid = *piid;
-/*
+
     cout << "\nInserted: " << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
@@ -491,7 +491,7 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
 
         count1++;
     }
-*/
+
     return 0;
      
 

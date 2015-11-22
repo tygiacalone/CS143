@@ -103,6 +103,12 @@ class BTreeIndex {
     return pf;
   }
 
+
+    int print_tree();
+    int print_tree_helper(PageId pid);
+    void print_nodes();
+    PageFile getpf();
+
 private:
     PageFile pf;         /// the PageFile used to store the actual b+tree in disk
 

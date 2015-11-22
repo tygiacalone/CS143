@@ -14,9 +14,11 @@
     <list default="true" id="98dddb8d-9b26-4079-935e-e5bd4e4172f2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bruinbase" afterPath="$PROJECT_DIR$/bruinbase" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bruinbase.dSYM/Contents/Resources/DWARF/bruinbase" afterPath="$PROJECT_DIR$/bruinbase.dSYM/Contents/Resources/DWARF/bruinbase" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testIndex2.idx" afterPath="$PROJECT_DIR$/testIndex2.idx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testindex.idx" afterPath="$PROJECT_DIR$/testindex.idx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BTreeIndex.cc" afterPath="$PROJECT_DIR$/BTreeIndex.cc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BTreeIndex.h" afterPath="$PROJECT_DIR$/BTreeIndex.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BTreeNode.cc" afterPath="$PROJECT_DIR$/BTreeNode.cc" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cc" afterPath="$PROJECT_DIR$/main.cc" />
     </list>
@@ -52,8 +54,8 @@
       <file leaf-file-name="BTreeNode.cc" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BTreeNode.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.703704">
-              <caret line="343" column="2" selection-start-line="343" selection-start-column="2" selection-end-line="343" selection-end-column="2" />
+            <state vertical-scroll-proportion="-9.037037">
+              <caret line="397" column="28" selection-start-line="397" selection-start-column="28" selection-end-line="397" selection-end-column="28" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -64,9 +66,21 @@
       <file leaf-file-name="BTreeNode.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BTreeNode.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
+            <state vertical-scroll-proportion="-7.9259257">
+              <caret line="106" column="20" selection-start-line="106" selection-start-column="14" selection-end-line="106" selection-end-column="20" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.cc" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main.cc">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="520" column="4" selection-start-line="520" selection-start-column="4" selection-end-line="520" selection-end-column="4" />
+              <folding>
+                <element signature="e#247#269#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -94,8 +108,8 @@
       <file leaf-file-name="BTreeIndex.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BTreeIndex.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-51.666668">
-              <caret line="93" column="8" selection-start-line="93" selection-start-column="8" selection-end-line="93" selection-end-column="8" />
+            <state vertical-scroll-proportion="-23.814816">
+              <caret line="114" column="13" selection-start-line="114" selection-start-column="13" selection-end-line="114" selection-end-column="13" />
               <folding>
                 <element signature="e#289#311#0" expanded="true" />
               </folding>
@@ -103,11 +117,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BTreeIndex.cc" pinned="false" current-in-tab="false">
+      <file leaf-file-name="BTreeIndex.cc" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/BTreeIndex.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.481482">
-              <caret line="248" column="0" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.7527216">
+              <caret line="389" column="0" selection-start-line="389" selection-start-column="0" selection-end-line="389" selection-end-column="0" />
               <folding>
                 <element signature="e#247#270#0" expanded="true" />
               </folding>
@@ -129,20 +143,8 @@
         <entry file="file://$PROJECT_DIR$/Bruinbase.h">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="18" column="41" selection-start-line="18" selection-start-column="41" selection-end-line="18" selection-end-column="41" />
+              <caret line="17" column="10" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.cc" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main.cc">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9066874">
-              <caret line="511" column="3" selection-start-line="511" selection-start-column="3" selection-end-line="511" selection-end-column="3" />
-              <folding>
-                <element signature="e#247#269#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -156,11 +158,11 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/PageFile.h" />
-        <option value="$PROJECT_DIR$/BTreeIndex.h" />
         <option value="$PROJECT_DIR$/BTreeNode.h" />
+        <option value="$PROJECT_DIR$/BTreeIndex.h" />
         <option value="$PROJECT_DIR$/BTreeIndex.cc" />
-        <option value="$PROJECT_DIR$/BTreeNode.cc" />
         <option value="$PROJECT_DIR$/main.cc" />
+        <option value="$PROJECT_DIR$/BTreeNode.cc" />
       </list>
     </option>
   </component>
@@ -535,22 +537,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/RecordFile.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="2" selection-start-line="22" selection-start-column="2" selection-end-line="22" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Bruinbase.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="41" selection-start-line="18" selection-start-column="41" selection-end-line="18" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/PageFile.h">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="30.62963">
@@ -567,18 +553,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BTreeNode.h">
+    <entry file="file://$PROJECT_DIR$/RecordFile.h">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
+          <caret line="22" column="2" selection-start-line="22" selection-start-column="2" selection-end-line="22" selection-end-column="2" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BTreeNode.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.9259257">
+          <caret line="106" column="20" selection-start-line="106" selection-start-column="14" selection-end-line="106" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="520" column="4" selection-start-line="520" selection-start-column="4" selection-end-line="520" selection-end-column="4" />
+          <folding>
+            <element signature="e#247#269#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Bruinbase.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="10" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BTreeNode.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.037037">
+          <caret line="397" column="28" selection-start-line="397" selection-start-column="28" selection-end-line="397" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/BTreeIndex.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-51.666668">
-          <caret line="93" column="8" selection-start-line="93" selection-start-column="8" selection-end-line="93" selection-end-column="8" />
+        <state vertical-scroll-proportion="-23.814816">
+          <caret line="114" column="13" selection-start-line="114" selection-start-column="13" selection-end-line="114" selection-end-column="13" />
           <folding>
             <element signature="e#289#311#0" expanded="true" />
           </folding>
@@ -587,30 +609,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BTreeIndex.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.481482">
-          <caret line="248" column="0" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.7527216">
+          <caret line="389" column="0" selection-start-line="389" selection-start-column="0" selection-end-line="389" selection-end-column="0" />
           <folding>
             <element signature="e#247#270#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/BTreeNode.cc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.703704">
-          <caret line="343" column="2" selection-start-line="343" selection-start-column="2" selection-end-line="343" selection-end-column="2" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.cc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9066874">
-          <caret line="511" column="3" selection-start-line="511" selection-start-column="3" selection-end-line="511" selection-end-column="3" />
-          <folding>
-            <element signature="e#247#269#0" expanded="true" />
           </folding>
         </state>
       </provider>
