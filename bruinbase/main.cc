@@ -473,7 +473,7 @@ int main()
     cout << "Test tree height after open: " << test.getTreeHeight() << endl;
 
 
-  for (int i=0; i<100; i++)
+  for (int i=0; i<70; i++)
       test.insert(i, (RecordId) {i, i});
 
     cout << "tree height: " << test.getTreeHeight() << endl;
@@ -485,7 +485,7 @@ int main()
       cout << "9: " << c.eid << " / " << c.pid << endl;
   cout << "did it work: " << test.locate(500, c) << endl;
       cout << "500: " << c.eid << " / " << c.pid << endl;
-/*
+
   //print out totals for testing purposes
   cout << "rootPid: " << test.getRootPid() << endl;
   cout << "treeHeight: " << test.getTreeHeight() << endl;
@@ -493,6 +493,8 @@ int main()
   //test.insert(2342, (RecordId) {1,0});
 
   test.close();
+
+
   BTreeIndex test2;
   test2.open("testIndex2.idx", 'w');
   cout << "test2 treeHeight: " << test2.getTreeHeight() << endl;
@@ -507,7 +509,7 @@ int main()
   cout << "test2 treeHeight: " << test2.getTreeHeight() << endl;
   test2.close();
 
-   */
+
 
   /*
 

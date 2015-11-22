@@ -169,6 +169,7 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
             insert_err = node.insert(parentKey, parentPid);
 
             if (insert_err) { // If we couldn't insert into the parent
+                cout << "Increasing tree height!" << endl;
                 BTNonLeafNode sibling;
                 int newParentKey = -1;
                 insert_err = 0;
@@ -222,8 +223,8 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
         }
         else {
             rootPid = pf.endPid();
-            treeHeight++;
             write_err = root.write(rootPid, pf);
+            treeHeight++;
 
             if (write_err) {
                 //cout << "write err" << endl;
@@ -241,7 +242,8 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
         RC insert_err = 0;
         insert_err = insertAtLevel(key, rid, rootPid, 1, insKey, insPid);
 
-        if (!insert_err) {
+        if (insert_err) {
+            cout << insert_err << endl;
             return 1;
         }
 
@@ -295,13 +297,14 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     BTLeafNode leaf = BTLeafNode();
     BTNonLeafNode nonleaf = BTNonLeafNode();
     
-    if(treeHeight > 1)
+    if(treeHeight > 0)
     {
-        for(int i=0; i<treeHeight - 1; i++)
+        for(int i=0; i<=treeHeight - 1; i++)
         {
             if(nonleaf.read(pid, pf) < 0)
                 return RC_NO_SUCH_RECORD;
-            
+            cout << "Looking for pid: " << pid << endl;
+
             if(nonleaf.locateChildPtr(searchKey, pid) < 0)
                 return -1; //not sure which error message to send here!
 
@@ -315,6 +318,19 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     }
     else
     {
+        eid = 0;
+        int maxEntries = leaf.getKeyCount();
+
+        while (eid < maxEntries) { // Find correct eid that corresponds to nEntry with key <= key we want to insert
+            nEntry tmp;
+            memcpy(&tmp, leaf.getBuffer() + eid * sizeof(nEntry), sizeof(nEntry));
+
+            if (tmp.key > searchKey)
+                break;
+
+            eid++;
+        }
+
         cursor.pid = pid;
         cursor.eid = eid;
     }
