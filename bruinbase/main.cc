@@ -121,7 +121,7 @@ int main()
     RecordId rid2;
     rid2.pid = -1;
     rid2.sid = -1;
-/*
+
     blah.readEntry(0, key2, rid2);
     cout << "Entry at specified eid has key=" << key2 << " and pid=" << rid2.pid << " and sid=" << rid2.sid << endl;
 
@@ -206,7 +206,7 @@ int main()
       root.insert(9,4);
 
     cout << "root node has numKeys: " << root.getKeyCount() << endl;
-
+    /*
     for(int k=0; k<121; k++)
       root.insert(9999,5);
 
@@ -498,11 +498,11 @@ int main()
   BTreeIndex test2;
   test2.open("testIndex2.idx", 'w');
   cout << "test2 treeHeight: " << test2.getTreeHeight() << endl;
-  test2.insert(272, (RecordId) {0,0});
+  test2.insert(272, (RecordId) {1,1});
   cout << "test2 treeHeight: " << test2.getTreeHeight() << endl;
   cout << "did it work: " << test2.locate(272, c) << endl;
       cout << "272: " << c.eid << " / " << c.pid << endl;
-  test2.insert(2342, (RecordId) {0,1});
+  test2.insert(2342, (RecordId) {2,2});
   cout << "did it work: " << test2.locate(2342, c) << endl;
       cout << "2342: " << c.eid << " / " << c.pid << endl;
 

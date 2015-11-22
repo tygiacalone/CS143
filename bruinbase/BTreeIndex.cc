@@ -301,8 +301,10 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     {
         for(int i=0; i<=treeHeight - 1; i++)
         {
-            if(nonleaf.read(pid, pf) < 0)
-                return RC_NO_SUCH_RECORD;
+            RC ret;
+            ret = nonleaf.read(pid, pf);
+            if(ret < 0)
+                return ret;//RC_NO_SUCH_RECORD;
             cout << "Looking for pid: " << pid << endl;
 
             if(nonleaf.locateChildPtr(searchKey, pid) < 0)
@@ -314,7 +316,7 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     
     if(leaf.read(pid,pf)<0)
     {
-        return RC_NO_SUCH_RECORD;
+        return  -3333;//RC_NO_SUCH_RECORD;
     }
     else
     {
@@ -336,6 +338,7 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     }
 
     return 0;
+    
 }
 
 /*
