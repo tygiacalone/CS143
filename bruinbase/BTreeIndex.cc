@@ -28,6 +28,19 @@ struct nEntry
 
 };
 
+
+struct nEntryNonLeaf
+{
+    int key;
+    PageId pid;
+
+    nEntryNonLeaf()
+    {
+        pid = 0;
+    }
+
+};
+
 /*
  * BTreeIndex constructor
  */
@@ -101,19 +114,42 @@ RC BTreeIndex::close() //Chloe
     return pf.close();
 }
 
+int global_root = 0;
 
 RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int height, int& parentKey, PageId& parentPid) //Ty
 {
-
+    //cout << "$$$$$$$$$$$$$$$$$$ ENTER INSERTATLEVEL $$$$$$$$$$$$$$$$$$$$$$" << endl;
+    //cout << "treeHeight: " << treeHeight << " == " << height << ": height" << endl;
     if (treeHeight == height) {// If we're at the leaf level
         BTLeafNode node;
         RC insert_err = 0;
         RC write_err = 0;
-
+        //cout << "Key I'm inserting: " << key << endl;
+        //cout << "Pid I'm inserting into: " << currPid << endl;
         node.read(currPid, pf);
         insert_err = node.insert(key, rid);
 
+        //cout << "Value in root node BEFORE WRITE: " << endl;
+        BTNonLeafNode rootnode;
+        rootnode.read(global_root, pf);
+        int maxNumKeys = rootnode.getKeyCount();
+        int count2 = 0;
+        while (count2 < maxNumKeys) {
+            nEntryNonLeaf tmp;
+            memcpy(&tmp, rootnode.getBuffer() + count2 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
+
+            if(tmp.key == 0)
+                break;
+            //cout << "key: " << tmp.key << endl;
+            //cout << "pid: " << tmp.pid << endl;
+            //cout << endl;
+
+            count2++;
+        }
+
+
         if (insert_err) { // If node is full
+            ////cout << "##########INSERT ERRRERERER ########################################" << endl;
             BTLeafNode sibling;
             write_err = 0;
             write_err = node.insertAndSplit(key, rid, sibling, parentKey);
@@ -123,6 +159,7 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
                 parentPid = pf.endPid();
                 node.setNextNodePtr(parentPid);
 
+                //cout << "Writing to pid parentPid 163: " << parentPid << endl;
                 write_err = sibling.write(parentPid, pf);
 
                 if (write_err) {
@@ -134,21 +171,24 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
             }
         }
         write_err = 0;
+        //cout << "Writing to pid currPid 172: " << currPid << endl;
         write_err = node.write(currPid, pf);
+        ////cout << "Value of currPid 176 is: " << currPid << endl;
 
         if (write_err) {
             return write_err;
         }
     }
     else { // Not at leaf yet
-        BTNonLeafNode node;
-        PageId next;
-
-        node.read(currPid, pf);
+        BTNonLeafNode currNode;
+        BTNonLeafNode nextNode;
+        PageId next = 0;
+        //cout << "CurrPid to read is: " << currPid << endl;
+        currNode.read(currPid, pf);
 
         int eid = 0;
-        int maxEntries = node.getKeyCount();
-
+        int maxNumKeys = currNode.getKeyCount();
+/*
         while (eid < maxEntries) { // Find correct eid that corresponds to nEntry with key <= key we want to insert
             nEntry tmp;
             memcpy(&tmp, node.getBuffer() + eid * sizeof(nEntry), sizeof(nEntry));
@@ -158,27 +198,88 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
 
             eid++;
         }
+        */
 
-        node.readEntry(eid, next); // Read in next node to try to insert into
+        //cout << "Value in root node: " << endl;
+        BTNonLeafNode rootnode;
+        rootnode.read(global_root, pf);
+        int count2 = 0;
+        while (count2 < maxNumKeys) {
+            nEntryNonLeaf tmp;
+            memcpy(&tmp, rootnode.getBuffer() + count2 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
 
+            if(tmp.key == 0)
+                break;
+            //cout << "key: " << tmp.key << endl;
+            //cout << "pid: " << tmp.pid << endl;
+            //cout << endl;
 
+            count2++;
+        }
+
+        int count1 = 0;
+        bool firstLoop = true;
+        while (count1 < maxNumKeys) {
+            nEntryNonLeaf tmp;
+            memcpy(&tmp, currNode.getBuffer() + count1 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
+
+            if (firstLoop) {
+                next = tmp.pid;
+                firstLoop = false;
+            }
+
+            //cout << "pid is now: " << next << endl;
+            //cout << "key is now: " << tmp.key << endl;
+            //cout << "searchKey is now: " << key << endl;
+
+            if (tmp.key > key) {
+                ////cout << "Breaking with value: " << pid << endl;
+                break;
+            }
+            else {
+                next = tmp.pid;
+            }
+            // 1 | 2, 4 | 3, 5| 4, 9
+            // insert 3
+            // 1
+            // 2 > 3
+            // 2
+            // 5 > 3
+            //
+            count1++;
+
+            if(tmp.key == 0) {
+                break;
+            }
+
+        }
+        //cout << "insertAtLevel into pid: " << next << endl;
+        //cout << "height is: " << height + 1 << endl;
+        //cout << "treeHeight is: " << treeHeight << endl;
+
+        nextNode.read(next, pf); // Read in next node to try to insert into
+
+        //cout << "parentKey before insertAtLevel 260: " << parentKey << endl;
         insertAtLevel(key, rid, next, height + 1, parentKey, parentPid);
+        //cout << "parentKey after insertAtLevel 262: " << parentKey << endl;
 
         if (parentKey > 0) { // If we split at child's level, insert into parent
             RC insert_err = 0;
-            insert_err = node.insert(parentKey, parentPid);
+            insert_err = currNode.insert(parentKey, parentPid);
 
             if (insert_err) { // If we couldn't insert into the parent
-                cout << "Increasing tree height!" << endl;
+                //cout << "Increasing tree height!" << endl;
                 BTNonLeafNode sibling;
                 int newParentKey = -1;
                 insert_err = 0;
-                insert_err = node.insertAndSplit(parentKey, parentPid, sibling, newParentKey);
+                insert_err = currNode.insertAndSplit(parentKey, parentPid, sibling, newParentKey);
 
                 if (!insert_err) {
                     parentKey = newParentKey;
                     parentPid = pf.endPid();
                     RC write_err = 0;
+
+                    //cout << "Writing to pid parentPid 278: " << parentPid << endl;
                     write_err = sibling.write(parentPid, pf);
 
                     if (write_err) {
@@ -193,10 +294,36 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
             else { // If we inserted into parent without issue, we no longer need to insert parentKey value so reset it
                 parentKey = -1;
             }
+
         }
 
-        node.write(currPid, pf); // Write changes
+        //cout << "Writing to pid currPid 296: " << currPid << endl;
+        currNode.write(currPid, pf); // Write changes
     }
+
+    BTNonLeafNode rootnode;
+    //cout << "Value in root node END WRITE: " << endl;
+    rootnode.read(global_root, pf);
+    int maxNumKeys = rootnode.getKeyCount();
+    int count2 = 0;
+    while (count2 < maxNumKeys) {
+        nEntryNonLeaf tmp;
+        memcpy(&tmp, rootnode.getBuffer() + count2 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
+
+        if(tmp.key == 0)
+            break;
+        //cout << "key: " << tmp.key << endl;
+        //cout << "pid: " << tmp.pid << endl;
+        //cout << endl;
+
+        count2++;
+    }
+
+
+    //cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    //cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    //cout << "$$$$$$$$$$$$$$$$$$$ END INSERTATLEVEL $$$$$$$$$$$$$$$$$$$$$$$" << endl;
+
 
     return 0;
 }
@@ -208,7 +335,6 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
  * @param rid[IN] the RecordId for the record being inserted into the index
  * @return error code. 0 if no error
  */
-
 RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
 {
 
@@ -223,11 +349,12 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
         }
         else {
             rootPid = pf.endPid();
+            //cout << "Writing to pid rootPid 343 insert: " << rootPid << endl;
             write_err = root.write(rootPid, pf);
             treeHeight++;
 
             if (write_err) {
-                //cout << "write err" << endl;
+                ////cout << "write err" << endl;
                 return -3;
             }
             else {
@@ -240,10 +367,11 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
         int insKey = -1;
         PageId insPid;
         RC insert_err = 0;
+        //cout << "\nRootPid to insert value: " << rootPid << endl;
         insert_err = insertAtLevel(key, rid, rootPid, 1, insKey, insPid);
 
         if (insert_err) {
-            cout << insert_err << endl;
+            //cout << insert_err << endl;
             return 1;
         }
 
@@ -251,15 +379,42 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
             BTNonLeafNode node;
             RC init_err = 0;
             init_err = node.initializeRoot(rootPid, insKey, insPid);
+            //cout << "new root pid: " << rootPid << endl;
+            //cout << "new root key, pid pair: " << insKey << ", " << insPid << endl;
+            global_root = rootPid;
 
             if (init_err) {
                 return RC_FILE_WRITE_FAILED;
             }
             else {
                 treeHeight++;
-                cout << "Tree height is: " << treeHeight << endl;
+                //cout << "Tree height is: " << treeHeight << endl;
                 rootPid = pf.endPid();
+                //cout << "Writing to pid rootPid 384 insert: " << rootPid << endl;
                 node.write(rootPid, pf);
+
+                //cout << "NEW ROOT ADDED!" << endl;
+
+                //cout << "Value in new root node: " << endl;
+                int maxNumKeys = node.getKeyCount();
+                int count1 = 0;
+
+                nEntryNonLeaf tmp;
+                memcpy(&tmp, node.getBuffer(), sizeof(nEntryNonLeaf));
+                //cout << "First pid: " << tmp.pid << endl;
+
+                while (count1 < maxNumKeys) {
+                    nEntryNonLeaf tmp;
+                    memcpy(&tmp, node.getBuffer() + count1 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
+
+                    if(tmp.key == 0)
+                        break;
+                    //cout << "key: " << tmp.key << endl;
+                    //cout << "pid: " << tmp.pid << endl;
+                    //cout << endl;
+
+                    count1++;
+                }
             }
 
         }
@@ -299,9 +454,8 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     
     if(treeHeight > 0)
     {
-        for(int i = treeHeight; i > 0; i--)
+        for(int i = treeHeight; i > 1; i--)
         {
-            cout << "Current pid: " << pid << endl;
             RC ret;
             ret = nonleaf.read(pid, pf);
 
@@ -321,15 +475,96 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
                 eid++;
             }
 
-            nonleaf.readEntry(eid, pid);
+            //cout << "\nCurrent pid of node: " << pid << endl;
+
+            //nonleaf.locateChildPtr(searchKey, pid);
+            int maxNumKeys = nonleaf.getKeyCount();
+            int count1 = 0;
+            bool firstLoop = true;
+            while (count1 < maxNumKeys) {
+                nEntryNonLeaf tmp;
+                memcpy(&tmp, nonleaf.getBuffer() + count1 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
+
+                if (firstLoop) {
+                    pid = tmp.pid;
+                    firstLoop = false;
+                }
+
+                //cout << "pid is now: " << pid << endl;
+                //cout << "key is now: " << tmp.key << endl;
+                //cout << "searchKey is now: " << searchKey << endl;
+
+                if (tmp.key > searchKey) {
+                    ////cout << "Breaking with value: " << pid << endl;
+                    break;
+                }
+                else {
+                    pid = tmp.pid;
+                }
+                // 1 | 2, 4 | 3, 5| 4, 9
+                // insert 3
+                // 1
+                // 2 > 3
+                // 2
+                // 5 > 3
+                //
+                count1++;
+
+                if(tmp.key == 0) {
+                    break;
+                }
+
+            }
+            //cout << "Breaking with value: " << pid << endl;
+
+            //nonleaf.readEntry(eid, pid);
+
+
+            //cout << "pid after readEntry: " << pid << endl;
+
+
+            //cout << "Value in current node: " << endl;
+            count1 = 0;
+            while (count1 < maxNumKeys) {
+                nEntryNonLeaf tmp;
+                memcpy(&tmp, nonleaf.getBuffer() + count1 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
+
+                if(tmp.key == 0)
+                    break;
+                //cout << "key: " << tmp.key << endl;
+                //cout << "pid: " << tmp.pid << endl;
+                //cout << endl;
+
+                count1++;
+            }
+
+
+            //cout << "pid end value: " << pid << endl;
         }
     }
 
-    cout << "Pid about to read: " << pid << endl;
+    //cout << "Pid about to read: " << pid << endl;
     RC leaf_ret = leaf.read(pid, pf);
-    if(leaf_ret)
+
+    if(leaf_ret) // If there's no leaf node
     {
-        return leaf_ret;//RC_NO_SUCH_RECORD;
+        eid = 0;
+        int maxEntries = nonleaf.getKeyCount();
+
+        while (eid < maxEntries) { // Find correct eid that corresponds to nEntry with key <= key we want to insert
+            nEntryNonLeaf tmp;
+            memcpy(&tmp, leaf.getBuffer() + eid * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
+
+            if (tmp.key > searchKey)
+                break;
+
+            eid++;
+        }
+
+        cursor.pid = pid;
+        cursor.eid = eid;
+        return 0;
+        //return leaf_ret;//RC_NO_SUCH_RECORD;
     }
     else
     {
@@ -345,6 +580,23 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
 
             eid++;
         }
+
+        //cout << "\nValue in current node: " << endl;
+        int maxNumKeys = leaf.getKeyCount();
+        int count1 = 0;
+        while (count1 < maxNumKeys) {
+            nEntry tmp;
+            memcpy(&tmp, leaf.getBuffer() + count1 * sizeof(nEntry), sizeof(nEntry));
+
+            if(tmp.key == 0)
+                break;
+            //cout << "key: " << tmp.key << endl;
+            //cout << "pid: " << tmp.rid.pid << endl;
+            //cout << endl;
+
+            count1++;
+        }
+
 
         cursor.pid = pid;
         cursor.eid = eid;
@@ -395,181 +647,4 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid) //Ty
     cursor.pid = pid;
 
     return 0;
-}
-
-/* call this function from the test file. since we shouldn't have
- * direct access to rootPid, this function calls another function
- * that does have access to rootPid */
-int BTreeIndex::print_tree()
-{
-    return print_tree_helper(rootPid);
-}
-
-// this is a modified locate()
-// we had to have a helper and print_tree because our test
-// program doesn't have access to rootPid
-int BTreeIndex::print_tree_helper(PageId pid)
-{
-    int enteries = 0;
-    RC rc = 0;
-    // read the buffer of pid
-    char buf[PageFile::PAGE_SIZE];
-    rc = pf.read(pid, buf);
-
-    // get the type of the pid we're currently at
-    // 0 = non-leaf node, 1 = leaf node
-    int type = 0;
-    if(buf[0] == '0')
-    {
-        type = 0;
-    }
-    else
-    {
-        type = 1;
-    }
-    //memcpy(&type, buf, sizeof(int));
-
-    if(type == 0)   // non-leaf node, so recurse
-    {
-        //RC rc = 0;
-
-        // get the node at pid
-        //char buf[PageFile::PAGE_SIZE];
-        //rc = pf.read(pid, buf);
-        int size = 0;
-        memcpy(&size, buf+4, sizeof(int));
-
-        char next[PageFile::PAGE_SIZE];
-        int next_index = 0;
-
-        cout << endl;
-        cout << "Non Leaf Node " << endl;
-        cout << "pid: \t" << pid << endl;
-        cout << "count: \t" << size << endl;
-        cout << endl;
-
-        int par = 0;
-        memcpy(&par, buf+8, sizeof(int));
-        cout << "parent: " << par << endl;
-
-        for(int i = 0; i < 2*size+1; i++)
-        {
-            int elem = 0;
-            memcpy(&elem, buf+16+(4*i), sizeof(int));
-            if(i%2 == 0)
-            {
-                next[next_index] = elem;
-                next_index++;
-            }
-            if(i%2 == 0)
-            {
-                if(i == 2*size )
-                {
-                    cout << " PageId :  " << elem;
-                }
-                else
-                {
-                    cout << " PageId :  " << elem << " | ";
-                }
-            }
-            else
-            {
-                cout <<" Key : "<< elem << " | ";
-            }
-        }
-        cout << endl <<endl;
-
-        for(int i = 0; i < next_index; i++)
-        {
-            enteries =  enteries + print_tree_helper(next[i]);
-        }
-    }
-
-    else            // leaf node, so find the record and return
-    {
-        //RC rc = 0;
-
-        // get the node at pid
-        //char buf[PageFile::PAGE_SIZE];
-        //rc = pf.read(pid, buf);
-        int size = 0;
-        memcpy(&size, buf+4, sizeof(int));
-
-        cout << endl;
-        cout << " Type Leaf Node "<<endl;
-        cout << "pid: \t" << pid << endl;
-        cout << "count: \t" << size << endl;
-        enteries = size;
-        cout << endl;
-
-        int par = 0;
-        memcpy(&par, buf+8, sizeof(int));
-        cout << "parent: " << par << endl;
-
-        //int which = 0;
-
-        for(int i = 0; i < size; i++)
-        {
-            int elem = 0;
-            RecordId rid;
-
-            memcpy(&rid, buf+16+(12*i), 8);
-            memcpy(&elem, buf+16+(12*i) + 8 , sizeof(int));
-            if( i >= size - 1)
-            {
-                cout << " Record PageId : " << rid.pid << " | ";
-                cout << " Key value : " << elem;
-            }
-            else
-            {
-                cout << " Record PageId : " << rid.pid << " | ";
-                cout << " Key value : " << elem << " | ";
-            }
-        }
-        int nextpage;
-        memcpy(&nextpage, buf+1020, sizeof(int));
-        cout << endl;
-        cout << " Next Pageid Id: " << nextpage ;
-
-        cout << endl;
-        cout << endl;
-    }
-    return enteries;
-}
-
-void BTreeIndex::print_nodes()
-{
-    cout<<"number of nodes : " << pf.endPid() - 1 <<endl;
-
-    char     page[PageFile::PAGE_SIZE];
-    char     nodeType;
-    int     entryCount;
-    PageId     parentPtr, nextNodePtr;
-
-    for(int i = 1; i < pf.endPid() ; i++)
-    {
-        pf.read(i, page);
-        //memcpy(&nodeType, page, sizeof(char));
-        memcpy(&entryCount, page+4, sizeof(int));
-        memcpy(&parentPtr, page+8, sizeof(int));
-
-        nodeType = page[0];
-        //nodeType = nodeType + '0';
-
-        if(nodeType == '0')
-        {
-            cout<<"pid: " << i << "\t node type: nonLeaf \t parent: "     << parentPtr << "\t entryCount: " << entryCount << endl;
-        }
-        else
-        {
-            memcpy(&nextNodePtr, page+1020, sizeof(int));
-            cout<<"pid: " << i << "\t node type: leaf     \t parent: "     << parentPtr << "\t entryCount: " << entryCount
-            <<"\t nextNodePtr: " << nextNodePtr << endl;
-        }
-    }
-}
-
-PageFile BTreeIndex::getpf()
-{
-    return pf;
 }
