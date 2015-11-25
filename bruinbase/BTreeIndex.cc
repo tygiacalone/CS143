@@ -253,7 +253,7 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
             init_err = node.initializeRoot(rootPid, insKey, insPid);
 
             if (init_err) {
-                return RC_FILE_WRITE_FAILED;
+                return  RC_FILE_WRITE_FAILED;
             }
             else {
                 treeHeight++;

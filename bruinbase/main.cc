@@ -472,7 +472,7 @@ int main()
     cout << "Test root ID after open: " << test.getRootPid() << endl;
     cout << "Test tree height after open: " << test.getTreeHeight() << endl;
 
-
+    cout<< "Beginning inserts here!" << endl << endl;
   for (int i=0; i<200; i++)
       test.insert(i, (RecordId) {i, i});
 
@@ -518,9 +518,26 @@ int main()
 
     test2.print_tree();
     test2.print_nodes();
-  test2.close();
+    test2.close();
 
-
+//    cout<< endl << endl<< "BEGIN CHLOE'S TESTING OF LOCATE HERE: " << endl<< endl;
+//    
+//    IndexCursor c;
+//    BTreeIndex test3;
+//    
+//    for (int i=0; i<200; i++)
+//        test3.insert(i, (RecordId) {i, i});
+//    
+//    cout << "did it work: " << test3.locate(1, c) << endl;
+//    cout << "1: " << c.eid << " / " << c.pid << endl;
+//    cout << "did it work: " << test3.locate(20, c) << endl;
+//    cout << "20: " << c.eid << " / " << c.pid << endl;
+//    cout << "did it work: " << test3.locate(90, c) << endl;
+//    cout << "90: " << c.eid << " / " << c.pid << endl;
+//    cout << "did it work: " << test3.locate(300, c) << endl;
+//    cout << "3000: " << c.eid << " / " << c.pid << endl;
+//    cout << "did it work: " << test3.locate(500, c) << endl;
+//    cout << "500: " << c.eid << " / " << c.pid << endl;
 
   /*
 
