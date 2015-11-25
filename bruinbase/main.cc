@@ -17,7 +17,7 @@ using namespace std;
 
 int main()
 {
-
+/*
     //TESTING BELOW IS FOR BTreeNode
 
 
@@ -77,7 +77,7 @@ int main()
     poop.setNextNodePtr(999);
     cout << "After setting it, the next pid is: " << poop.getNextNodePtr() << endl;
 
-/*
+
     //Test insertAndSplit by putting in a new (key, rid) pair
     BTLeafNode poop2;
     int poop2Key = -1;
@@ -93,7 +93,7 @@ int main()
 
     cout << "--------------------------------------------------" << endl;
     //----------------------------------------------------------------------------------------------------
-*/
+
     BTLeafNode blah;
     BTLeafNode blah2;
     blah.insert(1, (RecordId){12,23});
@@ -206,7 +206,7 @@ int main()
       root.insert(9,4);
 
     cout << "root node has numKeys: " << root.getKeyCount() << endl;
-    /*
+
     for(int k=0; k<121; k++)
       root.insert(9999,5);
 
@@ -456,7 +456,6 @@ int main()
   nonLeaf.print();
   cout << "siblingNonLeaf's #keys: " << siblingNonLeaf.getKeyCount() << endl;
   siblingNonLeaf.print();
-  */
 
 
 
@@ -472,8 +471,13 @@ int main()
     cout << "Test root ID after open: " << test.getRootPid() << endl;
     cout << "Test tree height after open: " << test.getTreeHeight() << endl;
 
+<<<<<<< HEAD
     cout<< "Beginning inserts here!" << endl << endl;
   for (int i=0; i<200; i++)
+=======
+
+  for (int i=0; i<10000; i++)
+>>>>>>> 4f33f01d2729975e62ea9e914d8a43294cd8b91e
       test.insert(i, (RecordId) {i, i});
 
     cout << "tree height: " << test.getTreeHeight() << endl;
@@ -483,20 +487,22 @@ int main()
       cout << "1: " << c.eid << " / " << c.pid << endl;
   cout << "did it work: " << test.locate(20, c) << endl;
       cout << "20: " << c.eid << " / " << c.pid << endl;
-    cout << "did it work: " << test.locate(90, c) << endl;
-    cout << "90: " << c.eid << " / " << c.pid << endl;
-    cout << "did it work: " << test.locate(300, c) << endl;
-    cout << "3000: " << c.eid << " / " << c.pid << endl;
-  cout << "did it work: " << test.locate(500, c) << endl;
-      cout << "500: " << c.eid << " / " << c.pid << endl;
+    cout << "did it work: " << test.locate(49, c) << endl;
+    cout << "49: " << c.eid << " / " << c.pid << endl;
+    cout << "did it work: " << test.locate(98, c) << endl;
+    cout << "98: " << c.eid << " / " << c.pid << endl;
+    cout << "did it work: " << test.locate(335, c) << endl;
+    cout << "335: " << c.eid << " / " << c.pid << endl;
+  cout << "did it work: " << test.locate(522, c) << endl;
+      cout << "522: " << c.eid << " / " << c.pid << endl;
+    cout << "did it work: " << test.locate(5220, c) << endl;
+    cout << "5220: " << c.eid << " / " << c.pid << endl;
+    cout << "did it work: " << test.locate(7022, c) << endl;
+    cout << "7022: " << c.eid << " / " << c.pid << endl;
 
   //print out totals for testing purposes
   cout << "rootPid: " << test.getRootPid() << endl;
   cout << "treeHeight: " << test.getTreeHeight() << endl;
-
-
-    test.print_tree();
-    test.print_nodes();
 
   //test.insert(2342, (RecordId) {1,0});
 
@@ -516,6 +522,7 @@ int main()
 
   cout << "test2 treeHeight: " << test2.getTreeHeight() << endl;
 
+<<<<<<< HEAD
     test2.print_tree();
     test2.print_nodes();
     test2.close();
@@ -538,8 +545,13 @@ int main()
 //    cout << "3000: " << c.eid << " / " << c.pid << endl;
 //    cout << "did it work: " << test3.locate(500, c) << endl;
 //    cout << "500: " << c.eid << " / " << c.pid << endl;
+=======
+  test2.close();
 
-  /*
+
+>>>>>>> 4f33f01d2729975e62ea9e914d8a43294cd8b91e
+
+
 
   IndexCursor c;
   //test BTreeIndex
