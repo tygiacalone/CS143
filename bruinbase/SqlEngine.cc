@@ -46,7 +46,10 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
     int    count;
     int    diff;
     BTreeIndex btree = BTreeIndex();
+    IndexCursor cursor = IndexCursor();
     bool index = true;
+    
+    
     // open the index if it exists
     if(btree.open(table + ".tbl", 'r') < 0)
         index = false;
@@ -60,17 +63,88 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
     int valnum;
     if(index) //if using BTree
     {
-        for(int i=0; i<cond.size(); i++)
+        int place = -1; //keeps track of which condition is not measuring value
+        for(int i=0; i<cond.size(); i++) //Look for first non-value condition
         {
             if(cond[i].attr == 2) //if measuring value (which is not how Btree is indexed), skip this condition
                 continue;
             else if(cond[i].comp == SelCond::EQ)
             {
                 valnum = atoi(cond[i].value);
+                place = i;
+                break;
             }
+            else if((cond[i].comp == SelCond::GE || cond[i].comp == SelCond::GE) && (place == -1 || atoi(cond[i].value) > atoi(cond[place].value)))
+                place = i;
             
         }
+        if(place >= 0)
+            btree.locate(atoi(cond[place].value), cursor);
+        else
+            btree.locate(0, cursor);
+        
+        
+        while(btree.readForward(cursor, key, rid) == 0)
+        {
+            RC ret = rf.read(rid, key, value);
+            for(int i=0; i<cond.size(); i++)
+            {
+                switch(cond[i].attr)
+                {
+                    case 1: //
+                        diff = key - atoi(cond[i].value);
+                        break;
+                    case 2: //
+                        diff = strcmp(value.c_str(), cond[i].value);
+                        break;
+                }
+                
+                switch(cond[i].comp)
+                {
+                    case SelCond::EQ:
+                        if(diff != 0)
+                        {
+                            if(cond[i].attr == 1) goto print_values;
+                            else continue;
+                        }
+                        break;
+                    case SelCond::NE:
+                        if(diff == 0) continue;
+                        break;
+                    case SelCond::GT:
+                        if(diff <= 0) continue;
+                        break;
+                    case SelCond::LT:
+                        if(diff >= 0)
+                        {
+                            if(cond[i].attr == 1) goto print_values;
+                            else
+                                continue;
+                        }
+                        break;
+                }
+            }
+            count++;
+            
+            switch(attr)
+            {
+                case 1: //SELECT key
+                    cout << key << endl;
+                    break;
+                case 2: //SELECT value
+                    cout<< value.c_str()<< endl;
+                    break;
+                case 3: //SELECT *
+                    cout << key << "'" << value.c_str() << "'" << endl;
+                    break;
+            }
+        }
+    print_values:
+        if(attr == 4) //Count
+            cout<< count <<endl;
     }
+    
+    
     
     // scan the table file from the beginning
     rid.pid = rid.sid = 0;

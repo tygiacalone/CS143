@@ -397,12 +397,9 @@ BTNonLeafNode::BTNonLeafNode()
  */
 RC BTNonLeafNode::read(PageId pid, const PageFile& pf) //Ty
 {
-<<<<<<< HEAD
-    cout << "pid: " << endl;
 
-=======
     ////cout << "pid: " << pid << endl;
->>>>>>> 4f33f01d2729975e62ea9e914d8a43294cd8b91e
+
     if(pf.read(pid, buffer))
         return RC_FILE_READ_FAILED;
     return 0;
