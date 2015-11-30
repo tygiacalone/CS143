@@ -43,15 +43,16 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
     RC     rc;
     int    key;
     string value;
-    int    count;
+    int    count = 0;
     int    diff;
-    BTreeIndex btree = BTreeIndex();
-    IndexCursor cursor = IndexCursor();
+    BTreeIndex btree;
+    IndexCursor cursor;
     bool index = true;
     
-    
+    RC ret = btree.open(table + ".idx", 'r');
+    cout << "file open return is: " << ret << endl;
     // open the index if it exists
-    if(btree.open(table + ".tbl", 'r') < 0)
+    if(ret != 0)
         index = false;
     
     // open the table file
@@ -63,6 +64,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
     int valnum;
     if(index) //if using BTree
     {
+        cout << "count INITIAL value is: " << count << endl;
         int place = -1; //keeps track of which condition is not measuring value
         for(int i=0; i<cond.size(); i++) //Look for first non-value condition
         {
@@ -78,15 +80,34 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                 place = i;
             
         }
-        if(place >= 0)
+
+        if(place >= 0) {
+            cout << "place >= 0" << endl;
             btree.locate(atoi(cond[place].value), cursor);
-        else
+        }
+        else {
+            cout << "place < 0" << endl;
             btree.locate(0, cursor);
-        
-        
+        }
+
+        cout << "pid, eid INITIAL is: " << cursor.pid << ", " << cursor.eid << endl;
         while(btree.readForward(cursor, key, rid) == 0)
         {
+            cout << "count value is: " << count << endl;
+
+            //cout << "pid, eid is: " << cursor.pid << ", " << cursor.eid << endl;
+            //cout << "value before read: " << value.c_str() << endl;
+            //cout << "key before read: " << key << endl;
             RC ret = rf.read(rid, key, value);
+            //cout << "value after read: " << value.c_str() << endl;
+            //cout << "key after read: " << key << endl;
+
+            if (ret < 0) {
+                cout << "Error reading tuple, now exiting" << endl;
+                goto print_values;
+            }
+
+            //cout << "pid, eid 99 is: " << cursor.pid << ", " << cursor.eid << endl;
             for(int i=0; i<cond.size(); i++)
             {
                 switch(cond[i].attr)
@@ -98,7 +119,8 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                         diff = strcmp(value.c_str(), cond[i].value);
                         break;
                 }
-                
+
+                //cout << "pid, eid 111 is: " << cursor.pid << ", " << cursor.eid << endl;
                 switch(cond[i].comp)
                 {
                     case SelCond::EQ:
@@ -122,8 +144,22 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                                 continue;
                         }
                         break;
+                    case SelCond::GE:
+                        if(diff >= 0) continue;
+                        break;
+                    case SelCond::LE:
+                        if(diff >= 0)
+                        {
+                            if(cond[i].attr == 1) goto print_values;
+                            else
+                                continue;
+                        }
+                        break;
                 }
+
+                //cout << "pid, eid 137 is: " << cursor.pid << ", " << cursor.eid << endl;
             }
+
             count++;
             
             switch(attr)
@@ -135,9 +171,10 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                     cout<< value.c_str()<< endl;
                     break;
                 case 3: //SELECT *
-                    cout << key << "'" << value.c_str() << "'" << endl;
+                    cout << key << " '" << value.c_str() << "'" << endl;
                     break;
             }
+            //cout << "pid, eid end is: " << cursor.pid << ", " << cursor.eid << endl;
         }
     print_values:
         if(attr == 4) //Count
@@ -238,7 +275,7 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
     RecordFile r(tblname, 'w');
     r.open(tblname, 'w');
     
-    BTreeIndex btree = BTreeIndex();
+    BTreeIndex btree;
     if(index)
     {
         if(btree.open(table + ".idx", 'w') < 0)
@@ -250,11 +287,16 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
     string line;
     while (getline(infile, line))
     {
+        cout << "line is: " << line << endl;
+
         if(parseLoadLine(line, key, value) < 0)
             return -1;
+
         RecordId rid;
+        rid.pid = 1;
         if(r.append( key, value, rid) < 0)
             return -1;
+
         if(index)
             btree.insert(key, rid);
         

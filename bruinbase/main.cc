@@ -466,29 +466,23 @@ int main()
     cout << "Test root ID before open: " << test.getRootPid() << endl;
     cout << "Test tree height before open: " << test.getTreeHeight() << endl;
 
-    test.open("testindex.idx", 'w');
+    test.open("xs.idx", 'w');
 
     cout << "Test root ID after open: " << test.getRootPid() << endl;
     cout << "Test tree height after open: " << test.getTreeHeight() << endl;
 
-<<<<<<< HEAD
-    cout<< "Beginning inserts here!" << endl << endl;
-  for (int i=0; i<200; i++)
-=======
-
-  for (int i=0; i<10000; i++)
->>>>>>> 4f33f01d2729975e62ea9e914d8a43294cd8b91e
+  for (int i=0; i<1; i++)
       test.insert(i, (RecordId) {i, i});
 
     cout << "tree height: " << test.getTreeHeight() << endl;
 
   cout << "" << endl;
-  cout << "did it work: " << test.locate(1, c) << endl;
-      cout << "1: " << c.eid << " / " << c.pid << endl;
-  cout << "did it work: " << test.locate(20, c) << endl;
-      cout << "20: " << c.eid << " / " << c.pid << endl;
-    cout << "did it work: " << test.locate(49, c) << endl;
-    cout << "49: " << c.eid << " / " << c.pid << endl;
+  cout << "did it work: " << test.locate(1578, c) << endl;
+      cout << "1578: " << c.eid << " / " << c.pid << endl;
+  cout << "did it work: " << test.locate(2244, c) << endl;
+      cout << "2244: " << c.eid << " / " << c.pid << endl;
+    cout << "did it work: " << test.locate(3084, c) << endl;
+    cout << "3084: " << c.eid << " / " << c.pid << endl;
     cout << "did it work: " << test.locate(98, c) << endl;
     cout << "98: " << c.eid << " / " << c.pid << endl;
     cout << "did it work: " << test.locate(335, c) << endl;
