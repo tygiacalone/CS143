@@ -24,7 +24,7 @@ struct PageFile::cacheStruct PageFile::readCache[PageFile::CACHE_COUNT];
 PageFile::PageFile() 
 { 
   fd = -1; 
-  epid = 0; 
+  epid = 0;
 }
 
 PageFile::PageFile(const string& filename, char mode)

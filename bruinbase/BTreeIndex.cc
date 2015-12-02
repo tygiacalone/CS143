@@ -126,6 +126,7 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
         RC write_err = 0;
         cout<< "Key I'm inserting: " << key << endl;
         cout<< "Pid I'm inserting into: " << currPid << endl;
+        cout<< "rid.pid I'm inserting into: " << rid.pid << endl;
         node.read(currPid, pf);
         insert_err = node.insert(key, rid);
 
@@ -374,7 +375,7 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
             global_root = rootPid;
 
             if (write_err) {
-                //cout<< "write err" << endl;
+                cout<< "write err" << endl;
                 return -3;
             }
             else {
@@ -385,7 +386,7 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
     else {
 
         int insKey = -1;
-        PageId insPid = -1;
+        PageId insPid = 0;
         RC insert_err = 0;
         cout<< "\nRootPid to insert value: " << rootPid << endl;
         insert_err = insertAtLevel(key, rid, rootPid, 1, insKey, insPid);

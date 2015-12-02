@@ -63,6 +63,7 @@ int BTLeafNode::getKeyCount()
  */
 RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
 {
+    cout << "rid.pid in insert is: " << rid.pid << endl;
     int totalKeys = getKeyCount();
     if(totalKeys >= maxNumKeys)
         return RC_NODE_FULL;
@@ -72,8 +73,8 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
     
     int eid = 0;
     
-    //If doesn't find the key:
-    if(locate(key, eid))
+
+    if(locate(key, eid)) //If doesn't find the key
     {
         newEntry = lastEntry;
     }
@@ -89,7 +90,9 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
             lastEntry = nextEntry;
         }
     }
-    
+
+    // Replace (key, rid) pair
+
     newEntry->key = key;
 
     //NOTE: NOT SURE ABOUT MEM ALLOCATION FOR RID HERE?!

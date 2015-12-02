@@ -272,10 +272,13 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
     ifstream infile(c);
     
     string tblname = table + ".tbl";
-    RecordFile r(tblname, 'w');
+    RecordFile r;
     r.open(tblname, 'w');
     
     BTreeIndex btree;
+
+    RecordId rid = r.endRid();
+
     if(index)
     {
         if(btree.open(table + ".idx", 'w') < 0)
@@ -283,8 +286,21 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
     }
     
     int key;
-    string value;
-    string line;
+    string value = "";
+    string line = "";
+
+    int count = 0;
+    while (count <= 8)
+    {
+        cout << "Value INITIAL of rid.pid in LOOP load: " << rid.pid << endl;
+        if(r.append( key, value, rid) < 0)
+            return -1;
+        cout << "Value AFTER APPEND of rid.pid in LOOP load: " << rid.pid << endl;
+
+        count++;
+    }
+
+
     while (getline(infile, line))
     {
         cout << "line is: " << line << endl;
@@ -292,14 +308,15 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
         if(parseLoadLine(line, key, value) < 0)
             return -1;
 
-        RecordId rid;
-        rid.pid = 1;
+        cout << "Value INITIAL of rid.pid in load: " << rid.pid << endl;
         if(r.append( key, value, rid) < 0)
             return -1;
-
+        cout << "Value AFTER APPEND of rid.pid in load: " << rid.pid << endl;
         if(index)
             btree.insert(key, rid);
-        
+
+
+        cout << "Value FINAL of rid.pid in load: " << rid.pid << endl;
     }
     if(index)
         btree.close();
