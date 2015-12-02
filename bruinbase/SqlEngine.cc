@@ -48,6 +48,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
     BTreeIndex btree;
     IndexCursor cursor;
     bool index = true;
+    bool strFlag = false;
     
     RC ret = btree.open(table + ".idx", 'r');
     cout << "file open return is: " << ret << endl;
@@ -69,7 +70,10 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
         for(int i=0; i<cond.size(); i++) //Look for first non-value condition
         {
             if(cond[i].attr == 2) //if measuring value (which is not how Btree is indexed), skip this condition
+            {
+                strFlag = true;
                 continue;
+            }
             else if(cond[i].comp == SelCond::EQ)
             {
                 valnum = atoi(cond[i].value);
@@ -84,7 +88,8 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
         if(place >= 0) {
             cout << "place >= 0" << endl;
             btree.locate(atoi(cond[place].value), cursor);
-            cursor.eid = cursor.eid - 1;
+            if (cursor.eid != 0)
+                cursor.eid = cursor.eid - 1;
         }
         else {
             cout << "place < 0" << endl;
@@ -98,7 +103,6 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
         cout << "cursor.pid on 96 is: " << cursor.pid << endl;
         while(btree.readForward(cursor, key, rid) == 0)
         {
-
             cout << "key on 98 is: " << key << endl;
             cout << "count value is: " << count << endl;
             cout << "cursor.eid on 102 is: " << cursor.eid << endl;
@@ -119,73 +123,144 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
             //cout << "pid, eid 99 is: " << cursor.pid << ", " << cursor.eid << endl;
             //cout << "value in select is: " << atoi(cond[0].value) << endl;
             //cout << "key in select is: " << key << endl;
+            if (!strFlag) {
+                cout << "NO STR FLAG SET" << endl;
+                for (int i = 0; i < cond.size(); i++) {
+                    switch (cond[i].attr) {
+                        case 1: //
+                            diff = key - atoi(cond[i].value);
+                            cout << "Case for int comparison" << endl;
+                            break;
+                        case 2: //
+                            diff = strcmp(value.c_str(), cond[i].value);
+                            cout << "Case for str comparison" << endl;
+                            break;
+                    }
+                    cout << "diff in select is: " << diff << endl;
 
-            for(int i=0; i<cond.size(); i++)
-            {
-                switch(cond[i].attr)
-                {
-                    case 1: //
-                        diff = key - atoi(cond[i].value);
+                    //cout << "pid, eid 111 is: " << cursor.pid << ", " << cursor.eid << endl;
+                    switch (cond[i].comp) {
+                        case SelCond::EQ:
+                            if (diff != 0) {
+                                cout << "I'm in here!!! 144 switch comp" << endl;
+                                if (cond[i].attr == 1) goto print_values;
+                                else {
+                                    cout << "I'm continuing!!! 146 switch comp" << endl;
+                                    continue;
+                                }
+                            }
+                            break;
+                        case SelCond::NE:
+                            if (diff == 0) continue;
+                            break;
+                        case SelCond::GT:
+                            if (diff <= 0) continue;
+                            break;
+                        case SelCond::LT:
+                            if (diff >= 0) {
+                                if (cond[i].attr == 1) goto print_values;
+                                else
+                                    continue;
+                            }
+                            break;
+                        case SelCond::GE:
+                            if (diff >= 0) continue;
+                            break;
+                        case SelCond::LE:
+                            if (diff >= 0) {
+                                if (cond[i].attr == 1) goto print_values;
+                                else
+                                    continue;
+                            }
+                            break;
+                    }
+
+                    //cout << "pid, eid 137 is: " << cursor.pid << ", " << cursor.eid << endl;
+                }
+
+                count++;
+
+                switch (attr) {
+                    case 1: //SELECT key
+                        cout << key << endl;
                         break;
-                    case 2: //
-                        diff = strcmp(value.c_str(), cond[i].value);
+                    case 2: //SELECT value
+                        cout << value.c_str() << endl;
+                        break;
+                    case 3: //SELECT *
+                        cout << "I'm printing a tuple!!!! 193" << endl;
+                        cout << key << " '" << value.c_str() << "'" << endl;
                         break;
                 }
-                //cout << "diff in select is: " << diff << endl;
+            } else {
+                cout << "YES STR FLAG SET" << endl;
+                for (int i = 0; i < cond.size(); i++) {
+                    switch (cond[i].attr) {
+                        case 1: //
+                            diff = key - atoi(cond[i].value);
+                            cout << "Case for int comparison" << endl;
+                            break;
+                        case 2: //
+                            diff = strcmp(value.c_str(), cond[i].value);
+                            cout << "Case for str comparison" << endl;
+                            break;
+                    }
+                    cout << "diff in select is: " << diff << endl;
 
-                //cout << "pid, eid 111 is: " << cursor.pid << ", " << cursor.eid << endl;
-                switch(cond[i].comp)
-                {
-                    case SelCond::EQ:
-                        if(diff != 0)
-                        {
-                            if(cond[i].attr == 1) goto print_values;
-                            else continue;
-                        }
-                        break;
-                    case SelCond::NE:
-                        if(diff == 0) continue;
-                        break;
-                    case SelCond::GT:
-                        if(diff <= 0) continue;
-                        break;
-                    case SelCond::LT:
-                        if(diff >= 0)
-                        {
-                            if(cond[i].attr == 1) goto print_values;
-                            else
-                                continue;
-                        }
-                        break;
-                    case SelCond::GE:
-                        if(diff >= 0) continue;
-                        break;
-                    case SelCond::LE:
-                        if(diff >= 0)
-                        {
-                            if(cond[i].attr == 1) goto print_values;
-                            else
-                                continue;
-                        }
-                        break;
+                    //cout << "pid, eid 111 is: " << cursor.pid << ", " << cursor.eid << endl;
+                    switch (cond[i].comp) {
+                        case SelCond::EQ:
+                            if (diff != 0) {
+                                cout << "I'm in here!!! 144 switch comp" << endl;
+                                if (cond[i].attr == 1) goto print_values;
+                                else {
+                                    cout << "I'm continuing!!! 146 switch comp" << endl;
+                                    continue;
+                                }
+                            }
+                            break;
+                        case SelCond::NE:
+                            if (diff == 0) continue;
+                            break;
+                        case SelCond::GT:
+                            if (diff <= 0) continue;
+                            break;
+                        case SelCond::LT:
+                            if (diff >= 0) {
+                                if (cond[i].attr == 1) goto print_values;
+                                else
+                                    continue;
+                            }
+                            break;
+                        case SelCond::GE:
+                            if (diff >= 0) continue;
+                            break;
+                        case SelCond::LE:
+                            if (diff >= 0) {
+                                if (cond[i].attr == 1) goto print_values;
+                                else
+                                    continue;
+                            }
+                            break;
+                    }
+
+                    //cout << "pid, eid 137 is: " << cursor.pid << ", " << cursor.eid << endl;
                 }
 
-                //cout << "pid, eid 137 is: " << cursor.pid << ", " << cursor.eid << endl;
-            }
+                count++;
 
-            count++;
-            
-            switch(attr)
-            {
-                case 1: //SELECT key
-                    cout << key << endl;
-                    break;
-                case 2: //SELECT value
-                    cout<< value.c_str()<< endl;
-                    break;
-                case 3: //SELECT *
-                    cout << key << " '" << value.c_str() << "'" << endl;
-                    break;
+                switch (attr) {
+                    case 1: //SELECT key
+                        cout << key << endl;
+                        break;
+                    case 2: //SELECT value
+                        cout << value.c_str() << endl;
+                        break;
+                    case 3: //SELECT *
+                        cout << "I'm printing a tuple!!!! 193" << endl;
+                        cout << key << " '" << value.c_str() << "'" << endl;
+                        break;
+                }
             }
             //cout << "pid, eid end is: " << cursor.pid << ", " << cursor.eid << endl;
         }
