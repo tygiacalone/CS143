@@ -694,6 +694,7 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid) //Ty
             break;
         cout << "key: " << tmp.key << endl;
         cout << "pid: " << tmp.rid.pid << endl;
+        cout << "eid: " << eid << endl;
         //rf.read(page, tmp.rid.sid, tmp.key, value);
         //cout << "string: " << value.c_str() << endl;
         cout << endl;
