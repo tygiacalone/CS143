@@ -108,6 +108,9 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
             }
 
             //cout << "pid, eid 99 is: " << cursor.pid << ", " << cursor.eid << endl;
+            //cout << "value in select is: " << atoi(cond[0].value) << endl;
+            //cout << "key in select is: " << key << endl;
+
             for(int i=0; i<cond.size(); i++)
             {
                 switch(cond[i].attr)
@@ -119,6 +122,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                         diff = strcmp(value.c_str(), cond[i].value);
                         break;
                 }
+                //cout << "diff in select is: " << diff << endl;
 
                 //cout << "pid, eid 111 is: " << cursor.pid << ", " << cursor.eid << endl;
                 switch(cond[i].comp)
@@ -204,6 +208,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                         diff = strcmp(value.c_str(), cond[i].value);
                         break;
                 }
+
                 
                 // skip the tuple if any condition is not met
                 switch (cond[i].comp) {

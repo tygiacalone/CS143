@@ -12,24 +12,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="98dddb8d-9b26-4079-935e-e5bd4e4172f2" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/xl.idx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/xl.tbl" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.output.txt.swp" afterPath="$PROJECT_DIR$/.output.txt.swp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bruinbase" afterPath="$PROJECT_DIR$/bruinbase" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bruinbase.dSYM/Contents/Resources/DWARF/bruinbase" afterPath="$PROJECT_DIR$/bruinbase.dSYM/Contents/Resources/DWARF/bruinbase" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/large.idx" afterPath="$PROJECT_DIR$/large.idx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/large.tbl" afterPath="$PROJECT_DIR$/large.tbl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/s.idx" afterPath="$PROJECT_DIR$/s.idx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/s.tbl" afterPath="$PROJECT_DIR$/s.tbl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xs.idx" afterPath="$PROJECT_DIR$/xs.idx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xs.tbl" afterPath="$PROJECT_DIR$/xs.tbl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xt.idx" afterPath="$PROJECT_DIR$/xt.idx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xt.tbl" afterPath="$PROJECT_DIR$/xt.tbl" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BTreeIndex.cc" afterPath="$PROJECT_DIR$/BTreeIndex.cc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BTreeNode.cc" afterPath="$PROJECT_DIR$/BTreeNode.cc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PageFile.cc" afterPath="$PROJECT_DIR$/PageFile.cc" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RecordFile.cc" afterPath="$PROJECT_DIR$/RecordFile.cc" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SqlEngine.cc" afterPath="$PROJECT_DIR$/SqlEngine.cc" />
     </list>
     <ignored path="bruinbase.iws" />
@@ -86,8 +71,8 @@
       <file leaf-file-name="BTreeIndex.cc" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BTreeIndex.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-152.77777">
-              <caret line="275" column="29" selection-start-line="275" selection-start-column="16" selection-end-line="275" selection-end-column="29" />
+            <state vertical-scroll-proportion="-4.5925927">
+              <caret line="381" column="25" selection-start-line="381" selection-start-column="25" selection-end-line="381" selection-end-column="25" />
               <folding>
                 <element signature="e#247#270#0" expanded="true" />
               </folding>
@@ -110,8 +95,8 @@
       <file leaf-file-name="SqlEngine.cc" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SqlEngine.cc">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6492537">
-              <caret line="302" column="0" selection-start-line="302" selection-start-column="0" selection-end-line="302" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="92" column="84" selection-start-line="92" selection-start-column="84" selection-end-line="92" selection-end-column="84" />
               <folding>
                 <element signature="e#247#264#0" expanded="true" />
               </folding>
@@ -289,7 +274,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1120" height="959" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17288443" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -298,7 +283,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298731" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298731" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19492503" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19492503" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298731" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -749,16 +734,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BTreeIndex.cc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-152.77777">
-          <caret line="275" column="29" selection-start-line="275" selection-start-column="16" selection-end-line="275" selection-end-column="29" />
-          <folding>
-            <element signature="e#247#270#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/RecordFile.cc">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.518518">
@@ -769,10 +744,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/BTreeIndex.cc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.5925927">
+          <caret line="381" column="25" selection-start-line="381" selection-start-column="25" selection-end-line="381" selection-end-column="25" />
+          <folding>
+            <element signature="e#247#270#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SqlEngine.cc">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6492537">
-          <caret line="302" column="0" selection-start-line="302" selection-start-column="0" selection-end-line="302" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="92" column="84" selection-start-line="92" selection-start-column="84" selection-end-line="92" selection-end-column="84" />
           <folding>
             <element signature="e#247#264#0" expanded="true" />
           </folding>
