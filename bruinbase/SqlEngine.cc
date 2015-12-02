@@ -147,7 +147,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                             if (cond[i].attr == 1) goto read_done;
                             else {
                                 cout << "I'm continuing!!! 146 switch comp" << endl;
-                                continue;
+                                goto next_loop;
                             }
                         }
                         break;
