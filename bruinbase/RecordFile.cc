@@ -192,7 +192,7 @@ RC RecordFile::append(int key, const std::string& value, RecordId& rid)
 
   // unless we are writing to the the first slot of an empty page,
   // we have to read the page first
-  std::cout << "erid.pid value in append 194 " << rid.pid << std::endl;
+  //std::cout << "erid.pid value in append 194 " << rid.pid << std::endl;
   if (erid.sid > 0) {
     if ((rc = pf.read(erid.pid, page)) < 0) return rc;
   } else {
@@ -201,7 +201,7 @@ RC RecordFile::append(int key, const std::string& value, RecordId& rid)
     memset(page, 0, PageFile::PAGE_SIZE);
   }
 
-  std::cout << "erid.pid value in append 203: " << rid.pid << std::endl;
+  //std::cout << "erid.pid value in append 203: " << rid.pid << std::endl;
   // write the record to the first empty slot 
   writeSlot(page, erid.sid, key, value);
 
@@ -212,12 +212,12 @@ RC RecordFile::append(int key, const std::string& value, RecordId& rid)
   // write the page to the disk
   if ((rc = pf.write(erid.pid, page)) < 0) return rc;
 
-  std::cout << "erid.pid value in append 214: " << rid.pid << std::endl;
+  //std::cout << "erid.pid value in append 214: " << rid.pid << std::endl;
     
   // we need to output the rid of the record slot
   rid = erid;
 
-  std::cout << "rid.pid value in append 219: " << rid.pid << std::endl;
+  //std::cout << "rid.pid value in append 219: " << rid.pid << std::endl;
 
   // advance the end record id by one to the next empty slot
   ++erid;

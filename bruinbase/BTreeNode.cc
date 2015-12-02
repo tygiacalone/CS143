@@ -21,7 +21,7 @@ RC BTLeafNode::read(PageId pid, const PageFile& pf)
 //    if(pf.read(pid, buffer))
 //        return RC_FILE_READ_FAILED;
 //    return 0;
-    //cout<< "pid in read is: " << pid<< endl;
+    ////cout<< "pid in read is: " << pid<< endl;
     return pf.read(pid, buffer);
 }
     
@@ -33,7 +33,7 @@ RC BTLeafNode::read(PageId pid, const PageFile& pf)
  */
 RC BTLeafNode::write(PageId pid, PageFile& pf)
 {
-    //cout<< "writing to pid: " << pid << endl;
+    ////cout<< "writing to pid: " << pid << endl;
     if(pf.write(pid, buffer))
         return RC_FILE_WRITE_FAILED;
     return 0;
@@ -63,7 +63,7 @@ int BTLeafNode::getKeyCount()
  */
 RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
 {
-    cout << "rid.pid in insert is: " << rid.pid << endl;
+    ////cout << "rid.pid in insert is: " << rid.pid << endl;
     int totalKeys = getKeyCount();
     if(totalKeys >= maxNumKeys)
         return RC_NODE_FULL;
@@ -100,8 +100,8 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
     *riid = rid;
 
     newEntry->rid = *riid;
-
-    cout<< "\nInserted: " << endl;
+/*
+    //cout<< "\nInserted: " << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
         nEntry tmp;
@@ -109,14 +109,14 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
 
         if(tmp.key == 0)
             break;
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.rid.pid << endl;
-        cout<< "sid: " << tmp.rid.sid << endl;
-        cout<< endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.rid.pid << endl;
+        //cout<< "sid: " << tmp.rid.sid << endl;
+        //cout<< endl;
 
         count1++;
     }
-
+*/
     return 0;
 }
 
@@ -133,9 +133,11 @@ RC BTLeafNode::insert(int key, const RecordId& rid) //Chloe
 RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling, int& siblingKey) //Ty
 {   //TY: When you are inserting rid into nEntry, be careful of the memory allocation. I made a new rid but I'm not sure if I did it properly/ how to test it so lmk what you think
 
-   // cout<< "in func" << endl;
-    //cout<< "key count: " << getKeyCount() << endl;
-    //cout<< "max keys: " << maxNumKeys << endl;
+    int thisNextNode = this->getNextNodePtr();
+    int sibNextNode = 0;
+   // //cout<< "in func" << endl;
+    ////cout<< "key count: " << getKeyCount() << endl;
+    ////cout<< "max keys: " << maxNumKeys << endl;
     // sibling MUST be empty
     if (sibling.getKeyCount() != 0) {
         return RC_INVALID_ATTRIBUTE;
@@ -146,14 +148,15 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
         return RC_FILE_WRITE_FAILED;
     }
 
-    cout<< "\nBefore: " << endl;
+    //cout<< "\nBefore: " << endl;
+    //cout << "node.getNextNodePtr() in insertandsplit: " << this->getNextNodePtr() << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
         nEntry tmp;
         memcpy(&tmp, buffer + count1 * sizeof(nEntry), sizeof(nEntry));
 
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.rid.pid << endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.rid.pid << endl;
 
         count1++;
     }
@@ -211,32 +214,37 @@ RC BTLeafNode::insertAndSplit(int key, const RecordId& rid, BTLeafNode& sibling,
     // Set pointer to sibling's next node to the old next of this node
     memcpy((sibling.buffer + PageFile::PAGE_SIZE) - sizeof(PageId), &nextPtr, sizeof(PageId));
 
+    this->setNextNodePtr(thisNextNode);
+    sibling.setNextNodePtr(sibNextNode);
+
     // Testing
     int count = 0;
-    cout<< "\nAfter: " << endl;
+    //cout<< "\nAfter: " << endl;
+    //cout << "node.getNextNodePtr() in insertandsplit: " << this->getNextNodePtr() << endl;
     while (count < maxNumKeys) {
         nEntry tmp;
         memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
 
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.rid.pid << endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.rid.pid << endl;
 
         count++;
     }
 
     count = 0;
-    cout<< "\nSibling: " << endl;
+    //cout<< "\nSibling: " << endl;
+    //cout << "sibling.getNextNodePtr() in insertandsplit: " << sibling.getNextNodePtr() << endl;
     while (count < maxNumKeys) {
         nEntry tmp;
         memcpy(&tmp, sibling.buffer + count * sizeof(nEntry), sizeof(nEntry));
 
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.rid.pid << endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.rid.pid << endl;
 
         count++;
     }
 
-    //cout<< "The nextNodePtr() final value should be: " << firstSiblingPid << endl;
+    ////cout<< "The nextNodePtr() final value should be: " << firstSiblingPid << endl;
 
     return 0;
 }
@@ -286,9 +294,9 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
     nEntry read;
 
     /*
-    cout<< "maxEntries: " << maxEntries << endl;
-    cout<< "eid: " << eid << endl;
-    cout<< "offset: " << offset << endl;
+    //cout<< "maxEntries: " << maxEntries << endl;
+    //cout<< "eid: " << eid << endl;
+    //cout<< "offset: " << offset << endl;
 
 
     // Print out all the key, rid pairs for testing
@@ -297,8 +305,8 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
         nEntry tmp;
         memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
 
-        cout<< "key: " << tmp.key << endl;
-        cout<< "rid: sid: " << tmp.rid.pid << " pid: " << tmp.rid.sid << endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "rid: sid: " << tmp.rid.pid << " pid: " << tmp.rid.sid << endl;
 
         count++;
     }
@@ -315,7 +323,7 @@ RC BTLeafNode::readEntry(int eid, int& key, RecordId& rid) //Ty
     rid.pid = read_rid->pid;
     rid.sid = read_rid->sid;
 
-    //cout<< "read: " << read.key << " saved: " << key << endl;
+    ////cout<< "read: " << read.key << " saved: " << key << endl;
 
     return 0;
 }
@@ -329,9 +337,9 @@ RC BTNonLeafNode::readEntry(int eid, PageId& pid) //Ty
     nEntry read;
 
     /*
-    cout<< "maxEntries: " << maxEntries << endl;
-    cout<< "eid: " << eid << endl;
-    cout<< "offset: " << offset << endl;
+    //cout<< "maxEntries: " << maxEntries << endl;
+    //cout<< "eid: " << eid << endl;
+    //cout<< "offset: " << offset << endl;
 
 
     // Print out all the key, rid pairs for testing
@@ -340,8 +348,8 @@ RC BTNonLeafNode::readEntry(int eid, PageId& pid) //Ty
         nEntry tmp;
         memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
 
-        cout<< "key: " << tmp.key << endl;
-        cout<< "rid: sid: " << tmp.pid << " pid: " << tmp.pid << endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "rid: sid: " << tmp.pid << " pid: " << tmp.pid << endl;
 
         count++;
     }
@@ -355,7 +363,7 @@ RC BTNonLeafNode::readEntry(int eid, PageId& pid) //Ty
 
     pid = *read_rid;
 
-    //cout<< "read: " << read.key << " saved: " << key << endl;
+    ////cout<< "read: " << read.key << " saved: " << key << endl;
 
     return 0;
 }
@@ -401,7 +409,7 @@ BTNonLeafNode::BTNonLeafNode()
 RC BTNonLeafNode::read(PageId pid, const PageFile& pf) //Ty
 {
 
-    //cout<< "pid: " << pid << endl;
+    ////cout<< "pid: " << pid << endl;
 
     if(pf.read(pid, buffer))
         return RC_FILE_READ_FAILED;
@@ -486,7 +494,7 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
 //
 //    newEntry->pid = *piid;
 
-    cout<< "\nInserted: " << endl;
+    //cout<< "\nInserted: " << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
         nEntry tmp;
@@ -494,9 +502,9 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
 
         if(tmp.key == 0)
             break;
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.pid << endl;
-        cout<< endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.pid << endl;
+        //cout<< endl;
 
         count1++;
     }
@@ -518,9 +526,9 @@ RC BTNonLeafNode::insert(int key, PageId pid) //Chloe
  */
 RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, int& midKey) //Ty
 {
-    //cout<< "in func" << endl;
-    //cout<< "key count: " << getKeyCount() << endl;
-    //cout<< "max keys: " << maxNumKeys << endl;
+    ////cout<< "in func" << endl;
+    ////cout<< "key count: " << getKeyCount() << endl;
+    ////cout<< "max keys: " << maxNumKeys << endl;
     // sibling MUST be empty
     if (sibling.getKeyCount() != 0) {
         return RC_INVALID_ATTRIBUTE;
@@ -532,14 +540,14 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
     }
 
 
-    cout<< "\nBefore: " << endl;
+    //cout<< "\nBefore: " << endl;
     int count1 = 0;
     while (count1 < maxNumKeys) {
         nEntry tmp;
         memcpy(&tmp, buffer + count1 * sizeof(nEntry), sizeof(nEntry));
 
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.pid << endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.pid << endl;
 
         count1++;
     }
@@ -564,7 +572,7 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
         nEntry * siblingNode = new nEntry;
         memcpy(siblingNode, buffer+offset, sizeof(nEntry));
 
-        //cout<< "key: " << siblingNode->key << endl;
+        ////cout<< "key: " << siblingNode->key << endl;
         if(firstLoop) {
             midKey = siblingNode->key;
             firstLoop = false;
@@ -587,25 +595,25 @@ RC BTNonLeafNode::insertAndSplit(int key, PageId pid, BTNonLeafNode& sibling, in
 
 
     int count = 0;
-    cout<< "\nAfter: " << endl;
+    //cout<< "\nAfter: " << endl;
     while (count < maxNumKeys) {
         nEntry tmp;
         memcpy(&tmp, buffer + count * sizeof(nEntry), sizeof(nEntry));
 
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.pid << endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.pid << endl;
 
         count++;
     }
 
     count = 0;
-    cout<< "\nSibling: " << endl;
+    //cout<< "\nSibling: " << endl;
     while (count < maxNumKeys) {
         nEntry tmp;
         memcpy(&tmp, sibling.buffer + count * sizeof(nEntry), sizeof(nEntry));
 
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.pid << endl;
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.pid << endl;
 
         count++;
     }
@@ -624,11 +632,11 @@ RC BTNonLeafNode::locateChildPtr(int searchKey, PageId& pid) //Chloe
 {
     pid = getKeyCount() - 1;
     nEntry* ne = (nEntry*)buffer + pid;
-    cout<< "pid is currently: " << pid << endl;
+    //cout<< "pid is currently: " << pid << endl;
 
     for(; pid >= 0; pid--)
     {
-        cout<< "pid is currently: " << pid << endl;
+        //cout<< "pid is currently: " << pid << endl;
         if(ne->key <= searchKey)
             break;
         else
@@ -665,19 +673,19 @@ RC BTNonLeafNode::initializeRoot(PageId pid1, int key, PageId pid2) //Ty
 
     nEntry tmp;
     memcpy(&tmp, buffer, sizeof(nEntry));
-    cout<< "initalizeRoot pid should be: " << pid1 << endl;
-    cout<< "initalizeRoot first pid: " << tmp.pid << endl;
-    cout<< "initalizeRoot first key: " << tmp.key << endl;
+    //cout<< "initalizeRoot pid should be: " << pid1 << endl;
+    //cout<< "initalizeRoot first pid: " << tmp.pid << endl;
+    //cout<< "initalizeRoot first key: " << tmp.key << endl;
 
     // Insert key, pid2 pair check for error.
     if (insert(key, pid2))
     {
-        cout<< "error inserting first node"<< endl;
+        //cout<< "error inserting first node"<< endl;
         return RC_FILE_WRITE_FAILED;
     }
 
     memcpy(&tmp, buffer, sizeof(nEntry));
-    cout<< "initalizeRoot first pid is now : " << tmp.pid << endl;
+    //cout<< "initalizeRoot first pid is now : " << tmp.pid << endl;
 
     return 0;
 }

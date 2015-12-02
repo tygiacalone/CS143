@@ -115,35 +115,39 @@ RC BTreeIndex::close() //Chloe
 }
 
 int global_root = 0;
-
+int split_count = 0;
 RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int height, int& parentKey, PageId& parentPid) //Ty
 {
-    cout<< "$$$$$$$$$$$$$$$$$$ ENTER INSERTATLEVEL $$$$$$$$$$$$$$$$$$$$$$" << endl;
-    cout<< "treeHeight: " << treeHeight << " == " << height << ": height" << endl;
+    //cout<< "$$$$$$$$$$$$$$$$$$ ENTER INSERTATLEVEL $$$$$$$$$$$$$$$$$$$$$$" << endl;
+    //cout<< "treeHeight: " << treeHeight << " == " << height << ": height" << endl;
     if (treeHeight == height) {// If we're at the leaf level
         BTLeafNode node;
         RC insert_err = 0;
         RC write_err = 0;
-        cout<< "Key I'm inserting: " << key << endl;
-        cout<< "Pid I'm inserting into: " << currPid << endl;
-        cout<< "rid.pid I'm inserting into: " << rid.pid << endl;
+        //cout<< "Key I'm inserting: " << key << endl;
+        //cout<< "Pid I'm inserting into: " << currPid << endl;
+        //cout<< "rid.pid I'm inserting into: " << rid.pid << endl;
         node.read(currPid, pf);
         insert_err = node.insert(key, rid);
+        //node.setNextNodePtr(pf.endPid());
 
         if (insert_err) { // If node is full
-            //cout<< "##########INSERT ERRRERERER ########################################" << endl;
+            split_count++;
+            //cout<< "##########INSERT ERRRERERER ######################################## I split " << split_count <<  endl;
             BTLeafNode sibling;
             write_err = 0;
             write_err = node.insertAndSplit(key, rid, sibling, parentKey);
 
             if (!write_err) {
-                sibling.setNextNodePtr(node.getNextNodePtr());
                 parentPid = pf.endPid();
-                cout << "getNextNodePtr() should be: " << parentPid << endl;
+                //cout << "sibling getNextNodePtr() should be: " << node.getNextNodePtr() << endl;
+                sibling.setNextNodePtr(node.getNextNodePtr());
+                //cout << "sibling getNextNodePtr() actually is: " << sibling.getNextNodePtr() << endl;
+                //cout << "getNextNodePtr() should be: " << parentPid << endl;
                 node.setNextNodePtr(parentPid);
-                cout << "getNextNodePtr() actually is: " << node.getNextNodePtr() << endl;
+                //cout << "getNextNodePtr() actually is: " << node.getNextNodePtr() << endl;
 
-                cout<< "Writing to pid parentPid 163: " << parentPid << endl;
+                //cout<< "Writing to pid parentPid 163: " << parentPid << endl;
                 write_err = sibling.write(parentPid, pf);
 
                 if (write_err) {
@@ -155,16 +159,17 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
             }
         }
         write_err = 0;
-        cout<< "Writing to pid currPid 172: " << currPid << endl;
+        //cout<< "Writing to pid currPid 172: " << currPid << endl;
         write_err = node.write(currPid, pf);
-        //cout<< "Value of currPid 176 is: " << currPid << endl;
+        ////cout<< "Value of currPid 176 is: " << currPid << endl;
 
         if (write_err) {
             return write_err;
         }
 
+        /*
         int maxNumKeys1 = node.getKeyCount();
-        cout<< "\n Value after insert: " << endl;
+        //cout<< "\n Value after insert: " << endl;
         int count1 = 0;
         while (count1 < maxNumKeys1) {
             nEntry tmp;
@@ -172,16 +177,16 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
 
             if(tmp.key == 0)
                 break;
-            cout<< "key: " << tmp.key << endl;
-            cout<< "pid: " << tmp.rid.pid << endl;
-            cout<< "sid: " << tmp.rid.sid << endl;
-            cout<< endl;
+            //cout<< "key: " << tmp.key << endl;
+            //cout<< "pid: " << tmp.rid.pid << endl;
+            //cout<< "sid: " << tmp.rid.sid << endl;
+            //cout<< endl;
 
             count1++;
         }
-
-        cout<< "Value of global_root: " << global_root << endl;
-        cout<< "Value in root node BEFORE WRITE: " << endl;
+        */
+        //cout<< "Value of global_root: " << global_root << endl;
+        //cout<< "Value in root node BEFORE WRITE: " << endl;
         BTNonLeafNode rootnode;
         rootnode.read(global_root, pf);
         int maxNumKeys = rootnode.getKeyCount();
@@ -192,9 +197,9 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
 
             if(tmp.key == 0)
                 break;
-            cout<< "key: " << tmp.key << endl;
-            cout<< "pid: " << tmp.pid << endl;
-            cout<< endl;
+            //cout<< "key: " << tmp.key << endl;
+            //cout<< "pid: " << tmp.pid << endl;
+            //cout<< endl;
 
             count2++;
         }
@@ -203,7 +208,7 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
         BTNonLeafNode currNode;
         BTNonLeafNode nextNode;
         PageId next = 0;
-        cout<< "CurrPid to read is: " << currPid << endl;
+        //cout<< "CurrPid to read is: " << currPid << endl;
         currNode.read(currPid, pf);
 
         int eid = 0;
@@ -220,7 +225,7 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
         }
         */
 
-        cout<< "Value in root node: " << endl;
+        //cout<< "Value in root node: " << endl;
         BTNonLeafNode rootnode;
         rootnode.read(global_root, pf);
         int count2 = 0;
@@ -230,9 +235,9 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
 
             if(tmp.key == 0)
                 break;
-            cout<< "key: " << tmp.key << endl;
-            cout<< "pid: " << tmp.pid << endl;
-            cout<< endl;
+            //cout<< "key: " << tmp.key << endl;
+            //cout<< "pid: " << tmp.pid << endl;
+            //cout<< endl;
 
             count2++;
         }
@@ -248,12 +253,12 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
                 firstLoop = false;
             }
 
-            cout<< "pid is now: " << next << endl;
-            cout<< "key is now: " << tmp.key << endl;
-            cout<< "searchKey is now: " << key << endl;
+            //cout<< "pid is now: " << next << endl;
+            //cout<< "key is now: " << tmp.key << endl;
+            //cout<< "searchKey is now: " << key << endl;
 
             if (tmp.key > key) {
-                //cout<< "Breaking with value: " << pid << endl;
+                ////cout<< "Breaking with value: " << pid << endl;
                 break;
             }
             else {
@@ -273,22 +278,24 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
             }
 
         }
-        cout<< "insertAtLevel into pid: " << next << endl;
-        cout<< "height is: " << height + 1 << endl;
-        cout<< "treeHeight is: " << treeHeight << endl;
+        //cout<< "insertAtLevel into pid: " << next << endl;
+        //cout<< "height is: " << height + 1 << endl;
+        //cout<< "treeHeight is: " << treeHeight << endl;
 
         nextNode.read(next, pf); // Read in next node to try to insert into
 
-        cout<< "parentKey before insertAtLevel 260: " << parentKey << endl;
+        //cout<< "parentKey before insertAtLevel 260: " << parentKey << endl;
+        //cout<< "parentPid before insertAtLevel 261: " << parentPid << endl;
         insertAtLevel(key, rid, next, height + 1, parentKey, parentPid);
-        cout<< "parentKey after insertAtLevel 262: " << parentKey << endl;
+        //cout<< "parentKey after insertAtLevel 262: " << parentKey << endl;
+        //cout<< "parentPid after insertAtLevel 263: " << parentPid << endl;
 
         if (parentKey > 0) { // If we split at child's level, insert into parent
             RC insert_err = 0;
             insert_err = currNode.insert(parentKey, parentPid);
 
             if (insert_err) { // If we couldn't insert into the parent
-                cout<< "Increasing tree height!" << endl;
+                //cout<< "Increasing tree height!" << endl;
                 BTNonLeafNode sibling;
                 int newParentKey = -1;
                 insert_err = 0;
@@ -299,7 +306,7 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
                     parentPid = pf.endPid();
                     RC write_err = 0;
 
-                    cout<< "Writing to pid parentPid 278: " << parentPid << endl;
+                    //cout<< "Writing to pid parentPid 278: " << parentPid << endl;
                     write_err = sibling.write(parentPid, pf);
 
                     if (write_err) {
@@ -317,32 +324,35 @@ RC BTreeIndex::insertAtLevel(int key, const RecordId& rid, PageId currPid, int h
 
         }
 
-        cout<< "Writing to pid currPid 296: " << currPid << endl;
+        //cout<< "Writing to pid currPid 296: " << currPid << endl;
         currNode.write(currPid, pf); // Write changes
     }
 
     BTNonLeafNode rootnode;
-    cout<< "Value in root node END WRITE: " << endl;
+    //cout<< "Value in root node END WRITE: " << endl;
     rootnode.read(global_root, pf);
     int maxNumKeys = rootnode.getKeyCount();
     int count2 = 0;
     while (count2 < maxNumKeys) {
+        BTLeafNode tmpnode;
         nEntryNonLeaf tmp;
         memcpy(&tmp, rootnode.getBuffer() + count2 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
 
         if(tmp.key == 0)
             break;
-        cout<< "key: " << tmp.key << endl;
-        cout<< "pid: " << tmp.pid << endl;
-        cout<< endl;
+        tmpnode.read(tmp.pid, pf);
+        //cout<< "key: " << tmp.key << endl;
+        //cout<< "pid: " << tmp.pid << endl;
+        //cout << "getNextNodePtr() value: " << tmpnode.getNextNodePtr() << endl;
+        //cout<< endl;
 
         count2++;
     }
 
 
-    cout<< "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
-    cout<< "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
-    cout<< "$$$$$$$$$$$$$$$$$$$ END INSERTATLEVEL $$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    //cout<< "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    //cout<< "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << endl;
+    //cout<< "$$$$$$$$$$$$$$$$$$$ END INSERTATLEVEL $$$$$$$$$$$$$$$$$$$$$$$" << endl;
 
 
     return 0;
@@ -369,13 +379,13 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
         }
         else {
             rootPid = pf.endPid();
-            cout<< "Writing to pid rootPid 343 insert: " << rootPid << endl;
+            //cout<< "Writing to pid rootPid 343 insert: " << rootPid << endl;
             write_err = root.write(rootPid, pf);
             treeHeight++;
             global_root = rootPid;
 
             if (write_err) {
-                cout<< "write err" << endl;
+                //cout<< "write err" << endl;
                 return -3;
             }
             else {
@@ -388,11 +398,11 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
         int insKey = -1;
         PageId insPid = 0;
         RC insert_err = 0;
-        cout<< "\nRootPid to insert value: " << rootPid << endl;
+        //cout<< "\nRootPid to insert value: " << rootPid << endl;
         insert_err = insertAtLevel(key, rid, rootPid, 1, insKey, insPid);
 
         if (insert_err) {
-            cout<< insert_err << endl;
+            //cout<< insert_err << endl;
             return 1;
         }
 
@@ -400,8 +410,8 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
             BTNonLeafNode node;
             RC init_err = 0;
             init_err = node.initializeRoot(rootPid, insKey, insPid);
-            cout<< "new root pid: " << rootPid << endl;
-            cout<< "new root key, pid pair: " << insKey << ", " << insPid << endl;
+            //cout<< "new root pid: " << rootPid << endl;
+            //cout<< "new root key, pid pair: " << insKey << ", " << insPid << endl;
             global_root = rootPid;
 
             if (init_err) {
@@ -409,30 +419,34 @@ RC BTreeIndex::insert(int key, const RecordId& rid) //Ty
             }
             else {
                 treeHeight++;
-                cout<< "Tree height is: " << treeHeight << endl;
+                //cout<< "Tree height is: " << treeHeight << endl;
                 rootPid = pf.endPid();
-                cout<< "Writing to pid rootPid 384 insert: " << rootPid << endl;
+                //cout<< "Writing to pid rootPid 384 insert: " << rootPid << endl;
                 node.write(rootPid, pf);
 
-                cout<< "NEW ROOT ADDED!" << endl;
-
-                cout<< "Value in new root node: " << endl;
+                //cout<< "NEW ROOT ADDED!" << endl;
+                global_root = rootPid;
+                //cout << "Global_root is now: " << global_root << endl;
+                //cout<< "Value in new root node: " << endl;
                 int maxNumKeys = node.getKeyCount();
                 int count1 = 0;
 
+                BTNonLeafNode rootnew;
+                rootnew.read(global_root, pf);
+
                 nEntryNonLeaf tmp;
-                memcpy(&tmp, node.getBuffer(), sizeof(nEntryNonLeaf));
-                cout<< "First pid: " << tmp.pid << endl;
+                memcpy(&tmp, rootnew.getBuffer(), sizeof(nEntryNonLeaf));
+                //cout<< "First pid: " << tmp.pid << endl;
 
                 while (count1 < maxNumKeys) {
                     nEntryNonLeaf tmp;
-                    memcpy(&tmp, node.getBuffer() + count1 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
+                    memcpy(&tmp, rootnew.getBuffer() + count1 * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
 
                     if(tmp.key == 0)
                         break;
-                    cout<< "key: " << tmp.key << endl;
-                    cout<< "pid: " << tmp.pid << endl;
-                    cout<< endl;
+                    //cout<< "key: " << tmp.key << endl;
+                    //cout<< "pid: " << tmp.pid << endl;
+                    //cout<< endl;
 
                     count1++;
                 }
@@ -472,7 +486,7 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
     
     BTLeafNode leaf = BTLeafNode();
     BTNonLeafNode nonleaf = BTNonLeafNode();
-    cout<< "treeHeight: " << treeHeight << endl;
+    //cout<< "treeHeight: " << treeHeight << endl;
     if(treeHeight > 0)
     {
         for(int i = treeHeight; i > 1; i--)
@@ -496,7 +510,7 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
                 eid++;
             }
 
-            cout<< "\nCurrent pid of node: " << pid << endl;
+            //cout<< "\nCurrent pid of node: " << pid << endl;
 
             //nonleaf.locateChildPtr(searchKey, pid);
             int maxNumKeys = nonleaf.getKeyCount();
@@ -511,12 +525,12 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
                     firstLoop = false;
                 }
 
-                cout<< "pid is now: " << pid << endl;
-                cout<< "key is now: " << tmp.key << endl;
-                cout<< "searchKey is now: " << searchKey << endl;
+                //cout<< "pid is now: " << pid << endl;
+                //cout<< "key is now: " << tmp.key << endl;
+                //cout<< "searchKey is now: " << searchKey << endl;
 
                 if (tmp.key > searchKey) {
-                    //cout<< "Breaking with value: " << pid << endl;
+                    ////cout<< "Breaking with value: " << pid << endl;
                     break;
                 }
                 else {
@@ -536,15 +550,15 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
                 }
 
             }
-            cout<< "Breaking with value: " << pid << endl;
+            //cout<< "Breaking with value: " << pid << endl;
 
             //nonleaf.readEntry(eid, pid);
 
 
-            cout<< "pid after readEntry: " << pid << endl;
+            //cout<< "pid after readEntry: " << pid << endl;
 
 
-            cout<< "Value in current node: " << endl;
+            //cout<< "Value in current node: " << endl;
             count1 = 0;
             while (count1 < maxNumKeys) {
                 nEntryNonLeaf tmp;
@@ -552,19 +566,19 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
 
                 if(tmp.key == 0)
                     break;
-                cout<< "key: " << tmp.key << endl;
-                cout<< "pid: " << tmp.pid << endl;
-                cout<< endl;
+                //cout<< "key: " << tmp.key << endl;
+                //cout<< "pid: " << tmp.pid << endl;
+                //cout<< endl;
 
                 count1++;
             }
 
 
-            cout<< "pid end value: " << pid << endl;
+            //cout<< "pid end value: " << pid << endl;
         }
     }
 
-    cout<< "Pid about to read: " << pid << endl;
+    //cout<< "Pid about to read: " << pid << endl;
     RC leaf_ret = leaf.read(pid, pf);
 
     if(leaf_ret) // If there's no leaf node
@@ -575,13 +589,13 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
         while (eid < maxEntries) { // Find correct eid that corresponds to nEntry with key <= key we want to insert
             nEntryNonLeaf tmp;
             memcpy(&tmp, leaf.getBuffer() + eid * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
-            cout << "tmp.key in locate: " << tmp.key << endl;
-            cout << "searchKey in locate: " << searchKey << endl;
+            //cout << "tmp.key in locate: " << tmp.key << endl;
+            //cout << "searchKey in locate: " << searchKey << endl;
             if (tmp.key > searchKey)
                 break;
 
             eid++;
-            cout << "eid in locate after add: " << tmp.key << endl;
+            //cout << "eid in locate after add: " << tmp.key << endl;
         }
 
         cursor.pid = pid;
@@ -604,7 +618,7 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
             eid++;
         }
 
-        cout<< "\nValue in current node: " << endl;
+        //cout<< "\nValue in current node: " << endl;
         int maxNumKeys = leaf.getKeyCount();
         int count1 = 0;
         while (count1 < maxNumKeys) {
@@ -613,9 +627,9 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
 
             if(tmp.key == 0)
                 break;
-            cout<< "key: " << tmp.key << endl;
-            cout<< "pid: " << tmp.rid.pid << endl;
-            cout<< endl;
+            //cout<< "key: " << tmp.key << endl;
+            //cout<< "pid: " << tmp.rid.pid << endl;
+            //cout<< endl;
 
             count1++;
         }
@@ -669,11 +683,11 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid) //Ty
     int eid = cursor.eid;
 
 
-    cout<< "About to read pid: " << pid << endl;
+    //cout<< "About to read pid: " << pid << endl;
     read_err = node.read(pid, pf);
     //node.readEntry(cursor.eid, key, rid);
     if (read_err) { // If we can't read in the specified node
-        cout<< "read_err" << endl;
+        //cout<< "read_err" << endl;
         return read_err;
     }
 
@@ -681,8 +695,8 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid) //Ty
     char page[PageFile::PAGE_SIZE];
     string value = "";
 
-    cout<< "\nValue in current node: " << endl;
-    cout << "getNextNodePtr() pid will be: " << node.getNextNodePtr() << endl;
+    //cout<< "\nValue in current node: " << endl;
+    //cout << "getNextNodePtr() pid will be: " << node.getNextNodePtr() << endl;
 
     int maxNumKeys = node.getKeyCount();
     int count1 = 0;
@@ -692,12 +706,12 @@ RC BTreeIndex::readForward(IndexCursor& cursor, int& key, RecordId& rid) //Ty
 
         if(tmp.key == 0)
             break;
-        cout << "key: " << tmp.key << endl;
-        cout << "pid: " << tmp.rid.pid << endl;
-        cout << "eid: " << eid << endl;
+        //cout << "key: " << tmp.key << endl;
+        //cout << "pid: " << tmp.rid.pid << endl;
+        //cout << "eid: " << eid << endl;
         //rf.read(page, tmp.rid.sid, tmp.key, value);
-        //cout << "string: " << value.c_str() << endl;
-        cout << endl;
+        ////cout << "string: " << value.c_str() << endl;
+        //cout << endl;
 
         count1++;
     }

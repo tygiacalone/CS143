@@ -51,21 +51,21 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
     bool strFlag = false;
     
     RC ret = btree.open(table + ".idx", 'r');
-    cout << "file open return is: " << ret << endl;
+    //cout << "file open return is: " << ret << endl;
     // open the index if it exists
     if(ret != 0)
         index = false;
     
     // open the table file
     if ((rc = rf.open(table + ".tbl", 'r')) < 0) {
-        fprintf(stderr, "Error: table %s does not exist\n", table.c_str());
+        //fprintf(stderr, "Error: table %s does not exist\n", table.c_str());
         return rc;
     }
     
     int valnum;
     if(index) //if using BTree
     {
-        cout << "count INITIAL value is: " << count << endl;
+        //cout << "count INITIAL value is: " << count << endl;
         int place = -1; //keeps track of which condition is not measuring value
         for(int i=0; i<cond.size(); i++) //Look for first non-value condition
         {
@@ -88,27 +88,27 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
         }
 
         if(place >= 0) {
-            cout << "place >= 0" << endl;
+            //cout << "place >= 0" << endl;
             btree.locate(atoi(cond[place].value), cursor);
             if (cursor.eid != 0)
                 cursor.eid = cursor.eid - 1;
         }
         else {
-            cout << "place < 0" << endl;
+            //cout << "place < 0" << endl;
             btree.locate(0, cursor);
         }
 
 
-        cout << "pid, eid INITIAL is: " << cursor.pid << ", " << cursor.eid << endl;
-        cout << "key on 94 is: " << key << endl;
-        cout << "cursor.eid on 95 is: " << cursor.eid << endl;
-        cout << "cursor.pid on 96 is: " << cursor.pid << endl;
+        //cout << "pid, eid INITIAL is: " << cursor.pid << ", " << cursor.eid << endl;
+        //cout << "key on 94 is: " << key << endl;
+        //cout << "cursor.eid on 95 is: " << cursor.eid << endl;
+        //cout << "cursor.pid on 96 is: " << cursor.pid << endl;
         while(btree.readForward(cursor, key, rid) == 0)
         {
-            cout << "key on 98 is: " << key << endl;
-            cout << "count value is: " << count << endl;
-            cout << "cursor.eid on 102 is: " << cursor.eid << endl;
-            cout << "cursor.pid on 103 is: " << cursor.pid << endl;
+            //cout << "key on 98 is: " << key << endl;
+            //cout << "count value is: " << count << endl;
+            //cout << "cursor.eid on 102 is: " << cursor.eid << endl;
+            //cout << "cursor.pid on 103 is: " << cursor.pid << endl;
 
             //cout << "pid, eid is: " << cursor.pid << ", " << cursor.eid << endl;
             //cout << "value before read: " << value.c_str() << endl;
@@ -118,7 +118,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
             //cout << "key after read: " << key << endl;
 
             if (ret < 0) {
-                cout << "Error reading tuple, now exiting" << endl;
+                //cout << "Error reading tuple, now exiting" << endl;
                 goto read_done;
             }
 
@@ -130,23 +130,23 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                 switch (cond[i].attr) {
                     case 1: //
                         diff = key - atoi(cond[i].value);
-                        cout << "Case for int comparison" << endl;
+                        //cout << "Case for int comparison" << endl;
                         break;
                     case 2: //
                         diff = strcmp(value.c_str(), cond[i].value);
-                        cout << "Case for str comparison" << endl;
+                        //cout << "Case for str comparison" << endl;
                         break;
                 }
-                cout << "diff in select is: " << diff << endl;
+                //cout << "diff in select is: " << diff << endl;
 
                 //cout << "pid, eid 111 is: " << cursor.pid << ", " << cursor.eid << endl;
                 switch (cond[i].comp) {
                     case SelCond::EQ:
                         if (diff != 0) {
-                            cout << "I'm in here!!! 144 switch comp" << endl;
+                            //cout << "I'm in here!!! 144 switch comp" << endl;
                             if (cond[i].attr == 1) goto read_done;
                             else {
-                                cout << "I'm continuing!!! 146 switch comp" << endl;
+                                //cout << "I'm continuing!!! 146 switch comp" << endl;
                                 goto next_loop;
                             }
                         }
@@ -189,7 +189,7 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
                     cout << value.c_str() << endl;
                     break;
                 case 3: //SELECT *
-                    cout << "I'm printing a tuple!!!! 193" << endl;
+                    //cout << "I'm printing a tuple!!!! 193" << endl;
                     cout << key << " '" << value.c_str() << "'" << endl;
                     break;
             }
@@ -311,10 +311,10 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
     if(index) {
         while (count <= 8)
         {
-            cout << "Value INITIAL of rid.pid in LOOP load: " << rid.pid << endl;
+            //cout << "Value INITIAL of rid.pid in LOOP load: " << rid.pid << endl;
             if(r.append( key, value, rid) < 0)
                 return -1;
-            cout << "Value AFTER APPEND of rid.pid in LOOP load: " << rid.pid << endl;
+            //cout << "Value AFTER APPEND of rid.pid in LOOP load: " << rid.pid << endl;
 
             count++;
         }
@@ -323,20 +323,20 @@ RC SqlEngine::load(const string& table, const string& loadfile, bool index)
 
     while (getline(infile, line))
     {
-        cout << "line is: " << line << endl;
+        //cout << "line is: " << line << endl;
 
         if(parseLoadLine(line, key, value) < 0)
             return -1;
 
-        cout << "Value INITIAL of rid.pid in load: " << rid.pid << endl;
+        //cout << "Value INITIAL of rid.pid in load: " << rid.pid << endl;
         if(r.append( key, value, rid) < 0)
             return -1;
-        cout << "Value AFTER APPEND of rid.pid in load: " << rid.pid << endl;
+        //cout << "Value AFTER APPEND of rid.pid in load: " << rid.pid << endl;
         if(index)
             btree.insert(key, rid);
 
 
-        cout << "Value FINAL of rid.pid in load: " << rid.pid << endl;
+        //cout << "Value FINAL of rid.pid in load: " << rid.pid << endl;
     }
     if(index)
         btree.close();
