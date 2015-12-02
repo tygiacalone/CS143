@@ -575,11 +575,13 @@ RC BTreeIndex::locate(int searchKey, IndexCursor& cursor) //Chloe
         while (eid < maxEntries) { // Find correct eid that corresponds to nEntry with key <= key we want to insert
             nEntryNonLeaf tmp;
             memcpy(&tmp, leaf.getBuffer() + eid * sizeof(nEntryNonLeaf), sizeof(nEntryNonLeaf));
-
+            cout << "tmp.key in locate: " << tmp.key << endl;
+            cout << "searchKey in locate: " << searchKey << endl;
             if (tmp.key > searchKey)
                 break;
 
             eid++;
+            cout << "eid in locate after add: " << tmp.key << endl;
         }
 
         cursor.pid = pid;

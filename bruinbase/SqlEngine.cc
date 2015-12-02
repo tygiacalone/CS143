@@ -84,16 +84,25 @@ RC SqlEngine::select(int attr, const string& table, const vector<SelCond>& cond)
         if(place >= 0) {
             cout << "place >= 0" << endl;
             btree.locate(atoi(cond[place].value), cursor);
+            cursor.eid = cursor.eid - 1;
         }
         else {
             cout << "place < 0" << endl;
             btree.locate(0, cursor);
         }
 
+
         cout << "pid, eid INITIAL is: " << cursor.pid << ", " << cursor.eid << endl;
+        cout << "key on 94 is: " << key << endl;
+        cout << "cursor.eid on 95 is: " << cursor.eid << endl;
+        cout << "cursor.pid on 96 is: " << cursor.pid << endl;
         while(btree.readForward(cursor, key, rid) == 0)
         {
+
+            cout << "key on 98 is: " << key << endl;
             cout << "count value is: " << count << endl;
+            cout << "cursor.eid on 102 is: " << cursor.eid << endl;
+            cout << "cursor.pid on 103 is: " << cursor.pid << endl;
 
             //cout << "pid, eid is: " << cursor.pid << ", " << cursor.eid << endl;
             //cout << "value before read: " << value.c_str() << endl;
